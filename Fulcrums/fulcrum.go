@@ -9,6 +9,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"google.golang.org/grpc"
@@ -38,10 +39,10 @@ func newKeyvalue(planeta string) *Keyvalue {
 }
 
 //Encuentra la posicion en la que se encuentra el planeta deseado en la lista de Keyvalues
-func findHashing(hashtable []Keyvalue, planeta string) []int32 {
-	var index int
+func findHashing(planeta string) int32 {
+
 	var cont int32 = 0
-	for _, planet := range hashtable {
+	for _, planet := range Hashing {
 		if planet.planeta == planeta {
 			return cont
 		}
@@ -50,6 +51,7 @@ func findHashing(hashtable []Keyvalue, planeta string) []int32 {
 	return -1
 }
 
+// Verifica si existe un archivo, en caso contrario lo crea
 func createFile(path string) {
 
 	var _, err = os.Stat(path)
@@ -69,57 +71,70 @@ func createFile(path string) {
 
 }
 
-func AddCity(planeta string, ciudad string, valor string) resustring {
+// Temporary directory
+const tmpDir = "/planetas"
+
+func AddCity(planeta string, ciudad string, valor string) string {
 
 	// "nombre_planeta nombre_ciudad [nuevo_valor]"
 
+	path := filepath.Join(tmpDir, "/"+planeta+".txt")
+
 	// VERIFICAR QUE EL ARCHIVO EXISTE
-	if _, err := os.Stat("/planetas/" + planeta + ".txt"); err == nil {
+	if _, err := os.Stat(path); err == nil {
+
 		// path/to/whatever exists
-		index := findHashing(Hashing, planeta)
+		index := findHashing(planeta)
 		Hashing[index].vector[idFulcrum]++
 
 	} else if errors.Is(err, os.ErrNotExist) {
-		// path/to/whatever does *not* exist
-		createFile("/planetas/" + planeta + ".txt")
 
+		// path/to/whatever does *not* exist
+		createFile(path)
 		Hashing = append(Hashing, *newKeyvalue(planeta))
-		index := findHashing(Hashing, planeta)
+		index := findHashing(planeta)
 		Hashing[index].vector[idFulcrum]++
+
 	}
 
-	//Abrir archivo y escribir al final
-	if valor == nil {
+	// Abrir archivo y escribir al final
+	if valor == "" {
 		valor = "0"
 	}
-	var f, err = os.OpenFile("/planetas/"+planeta+".txt", os.O_APPEND|os.O_WRONLY, 0644)
+
+	dataByte := []byte(planeta + " " + ciudad + " " + valor + "\n")
+
+	// Escribir contenido en el archivo
+	err := ioutil.WriteFile(path, dataByte, 0777)
+
+	// log Error
 	if err != nil {
+		log.Fatalln(err)
 		return "error"
-	}
-
-	n, err := f.WriteString(planeta + ciudad + valor + "\n")
-
-	if err != nil {
-		return "Errr "
 	}
 
 	result := "success"
 
 	return result
+
 }
 
 func UpdateName(planeta string, ciudad string, valor string) string {
 
+	path := filepath.Join(tmpDir, "/"+planeta+".txt")
+
 	//Abrir archivo
-	input, err := ioutil.ReadFile("/planetas/" + planeta + ".txt")
+	input, err := ioutil.ReadFile(path)
+
 	if err != nil {
 		log.Fatalln(err)
+		return "error"
 	}
 
+	// Matrix con las lineas del archivo
 	lines := strings.Split(string(input), "\n")
 
-	//LEER LINEA POR LINEA
-
+	// Leer linea x linea
 	for i, line := range lines {
 		if strings.Contains(line, ciudad) {
 			split_line := strings.Split(line, " ")
@@ -131,34 +146,36 @@ func UpdateName(planeta string, ciudad string, valor string) string {
 
 	output := strings.Join(lines, "\n")
 
-	err = ioutil.WriteFile("/planetas/"+planeta+".txt", []byte(output), 0644)
+	err = ioutil.WriteFile(path, []byte(output), 0644)
 
 	if err != nil {
 		log.Fatalln(err)
+		return "error"
 	}
 
-	index := findHashing(Hashing, planeta)
+	index := findHashing(planeta)
 	Hashing[index].vector[idFulcrum]++
-	result := "success"
 
-	return result
+	return "success"
 
 }
 
 func UpdateNumber(planeta string, ciudad string, valor string) string {
 
+	path := filepath.Join(tmpDir, "/"+planeta+".txt")
+
 	// Abrir archivo
-	input, err := ioutil.ReadFile("/planetas/" + planeta + ".txt")
+	input, err := ioutil.ReadFile(path)
 
 	if err != nil {
 		log.Fatalln(err)
+		return "error"
 	}
 
 	// Arreglo de lineas
 	lines := strings.Split(string(input), "\n")
 
 	//LEER LINEA POR LINEA
-
 	for i, line := range lines {
 		if strings.Contains(line, ciudad) {
 			split_line := strings.Split(line, " ")
@@ -170,107 +187,109 @@ func UpdateNumber(planeta string, ciudad string, valor string) string {
 
 	output := strings.Join(lines, "\n")
 
-	err = ioutil.WriteFile("/planetas/"+planeta+".txt", []byte(output), 0644)
+	err = ioutil.WriteFile(path, []byte(output), 0644)
 
 	if err != nil {
 		log.Fatalln(err)
+		return "error"
 	}
 
-	index := findHashing(Hashing, planeta)
+	index := findHashing(planeta)
 	Hashing[index].vector[idFulcrum]++
 
-	result := "success"
-
-	return result
+	return "success"
 
 }
 
 func DeleteCity(planeta string, ciudad string) string {
 
+	path := filepath.Join(tmpDir, "/"+planeta+".txt")
+
 	//Abrir archivo
-	input, err := ioutil.ReadFile("/planetas/" + planeta + ".txt")
+	input, err := ioutil.ReadFile(path)
+
 	if err != nil {
 		log.Fatalln(err)
+		return "error"
 	}
 
 	lines := strings.Split(string(input), "\n")
 
-	var line_to_delete int32
+	var del_index int
 
 	for i, line := range lines {
 		if strings.Contains(line, ciudad) {
-			line_to_delete = i
+			del_index = i
 		}
 	}
 
-	lines_to_write := append(lines[:line_to_delete], lines[line_to_delete+1:]...)
+	lines_to_write := append(lines[:del_index], lines[del_index+1:]...)
 
 	output := strings.Join(lines_to_write, "\n")
 
-	err = ioutil.WriteFile("/planetas/"+planeta+".txt", []byte(output), 0644)
+	err = ioutil.WriteFile(path, []byte(output), 0644)
 
 	if err != nil {
 		log.Fatalln(err)
+		return "error"
 	}
 
-	index := findHashing(Hashing, planeta)
+	index := findHashing(planeta)
 	Hashing[index].vector[idFulcrum]++
 
-	result := "success"
+	return "success"
 
-	return result
 }
 
 func (s *server) Comands_Informantes_Fulcrum(ctx context.Context, in *pb.ComandIFRequest) (*pb.ComandIFReply, error) {
 
+	// CHANGE
 	reloj_vector_s := []int32{1, 0, 1}
 
 	operacion := in.GetOperacion()
-	nombre_planeta := in.GetNombrePlaneta()
-	nombre_ciudad := in.GetNombreCiudad()
+	planeta := in.GetNombrePlaneta()
+	ciudad := in.GetNombreCiudad()
 	valor := in.GetValor()
 	localip := in.GetIp()
 
-	if idFulcrum == nil {
-		switch localip {
-		case "10.6.43.113:50052":
-			idFulcrum = 0
-		case "10.6.43.114:50052":
-			idFulcrum = 1
-		case "10.6.43.115:50052":
-			idFulcrum = 2
-		}
+	switch localip {
+	case "10.6.43.113:50052":
+		idFulcrum = 0
+	case "10.6.43.114:50052":
+		idFulcrum = 1
+	case "10.6.43.115:50052":
+		idFulcrum = 2
 	}
+
 	fmt.Println("operacion: ", operacion)
-	fmt.Println("nameplanet: ", nombre_planeta)
-	fmt.Println("namecity: ", nombre_ciudad)
+	fmt.Println("nameplanet: ", planeta)
+	fmt.Println("namecity: ", ciudad)
 	fmt.Println("value: ", valor)
 
 	switch operacion {
 
 	// LOGICA DE ADDCITY
 	case "1":
-		AddCity(nombre_planeta, nombre_ciudad, valor)
+		AddCity(planeta, ciudad, valor)
 
 	// LOGICA DE UPDATE NAME
 	case "2":
-		UpdateName(nombre_planeta, nombre_ciudad, valor)
+		UpdateName(planeta, ciudad, valor)
 
 	// LOGICA UPDATE NUMBER
 	case "3":
-		UpdateNumber(nombre_planeta, nombre_ciudad, valor)
+		UpdateNumber(planeta, ciudad, valor)
 
 	// LOGICA DELETE CITY
 	case "4":
-		DeleteCity(nombre_planeta, nombre_ciudad)
+		DeleteCity(planeta, ciudad)
 
 	}
 
 	// VERIFICAR SI EXISTE EL ARCHIVO LOGS DE REGISTROS
 
 	// DEVOLVER RELOJ ARCHIVO
-
-	index := findHashing(Hashing, planeta)
+	index := findHashing(planeta)
 	reloj_vector_s = Hashing[index].vector
 
 	return &pb.ComandIFReply{RelojVector: reloj_vector_s}, nil
