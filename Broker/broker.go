@@ -50,15 +50,19 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIB
 
 	}
 
+	//DEBUG
+
+	ip = "10.6.43.114:50052"
+
 	return &pb.ComandIBReply{Ip: ip}, nil
 }
 
 const (
 	port           = ":50051"
 	BrokenAddress  = "10.6.43.116:50052"
-	Server1Address = "10.6.43.113:50051"
-	Server2Address = "10.6.43.114:50051"
-	Server3Address = "10.6.43.115:50051"
+	Server1Address = "10.6.43.113:50052"
+	Server2Address = "10.6.43.114:50052"
+	Server3Address = "10.6.43.115:50052"
 )
 
 func main() {
