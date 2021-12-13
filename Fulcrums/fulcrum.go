@@ -309,11 +309,11 @@ func (s *server) Comands_Informantes_Fulcrum(ctx context.Context, in *pb.ComandI
 
 	// LOGICA UPDATE NUMBER
 	case "3":
-		fmt.Prinln(UpdateNumber(planeta, ciudad, valor))
+		fmt.Println(UpdateNumber(planeta, ciudad, valor))
 
 	// LOGICA DELETE CITY
 	case "4":
-		fmt.Prinln(DeleteCity(planeta, ciudad))
+		fmt.Println(DeleteCity(planeta, ciudad))
 
 	}
 

@@ -99,6 +99,8 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 	// Contact the server and psirint out its response.
 	ctx := context.Background()
 
+	r, _ := client.Comands_Broker_Fulcrum(ctx, &pb.ComandIBRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, Valor: valor, RelojVector: reloj_vector_Informante})
+
 	//DEBUG
 
 	return &pb.ComandIBReply{Ip: ip}, nil
