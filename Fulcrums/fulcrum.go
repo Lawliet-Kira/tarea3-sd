@@ -80,9 +80,15 @@ func AddCity(planeta string, ciudad string, valor string) string {
 
 	// "nombre_planeta nombre_ciudad [nuevo_valor]"
 
-	path := filepath.Join(tmpDir, planeta+".txt")
+	// path := filepath.Join(tmpDir, planeta+".txt")
+	path, err := os.Getwd()
+	if err != nil {
+		log.Println(err)
+	}
 
-	fmt.Println("path: ", path)
+	fmt.Println("current path: ", path)
+
+	path = path + "/planetas/" + planeta + ".txt"
 
 	// VERIFICAR QUE EL ARCHIVO EXISTE
 	if _, err := os.Stat(path); err == nil {
