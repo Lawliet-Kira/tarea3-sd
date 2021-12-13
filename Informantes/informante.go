@@ -87,7 +87,8 @@ func main() {
 		fmt.Scanf("%s\n", &comand)
 		splited := strings.Split(comand, " ")
 
-		fmt.Println("command: %q\n", comand)
+		fmt.Println("command: ", comand)
+		fmt.Println("c")
 
 		nombre_planeta := splited[0]
 		nombre_ciudad := splited[1]
