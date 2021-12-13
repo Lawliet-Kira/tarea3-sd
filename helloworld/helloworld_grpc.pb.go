@@ -14,452 +14,202 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// GameClient is the client API for Game service.
+// ComunicationClient is the client API for Comunication service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type GameClient interface {
-	// Sends Join game
-	JoinGame(ctx context.Context, in *JoinRequest, opts ...grpc.CallOption) (*JoinReply, error)
-	BeginGame(ctx context.Context, in *BeginRequest, opts ...grpc.CallOption) (*BeginReply, error)
-	// Sends end game
-	EndGame(ctx context.Context, in *EndRequest, opts ...grpc.CallOption) (*EndReply, error)
-	// Begin Stage
-	BeginStage(ctx context.Context, in *BeginStageRequest, opts ...grpc.CallOption) (*BeginStageReply, error)
-	BeginRound(ctx context.Context, in *PingMsg, opts ...grpc.CallOption) (*BeginRoundReply, error)
-	SendJugadaE1(ctx context.Context, in *JugadaE1, opts ...grpc.CallOption) (*PlayerStatusE1, error)
-	SendJugadaE2(ctx context.Context, in *JugadaE2, opts ...grpc.CallOption) (*PingMsg, error)
-	SendJugadaE3(ctx context.Context, in *JugadaE3, opts ...grpc.CallOption) (*PingMsg, error)
-	IsAlready(ctx context.Context, in *PingMsg, opts ...grpc.CallOption) (*PlayerStatusE2, error)
-	IsAlready2(ctx context.Context, in *PingMsg, opts ...grpc.CallOption) (*PlayerStatusE3, error)
-	SendJugadas(ctx context.Context, in *StagePlays, opts ...grpc.CallOption) (*StoredReply, error)
+type ComunicationClient interface {
+	// Sends Comands_Informantes
+	Comands_Informantes_Broker(ctx context.Context, in *ComandIBRequest, opts ...grpc.CallOption) (*ComandIBReply, error)
+	// Sends Comands_Leia
+	Comands_Leia_Broker(ctx context.Context, in *ComandLBRequest, opts ...grpc.CallOption) (*ComandLBReply, error)
+	// Sends Comands_Broker_Fulcrum
+	Comands_Broker_Fulcrum(ctx context.Context, in *ComandBFRequest, opts ...grpc.CallOption) (*ComandBFReply, error)
+	// Sends Comandas_Informantes_Fulcrum
+	Comands_Informantes_Fulcrum(ctx context.Context, in *ComandIFRequest, opts ...grpc.CallOption) (*ComandIFReply, error)
 }
 
-type gameClient struct {
+type comunicationClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewGameClient(cc grpc.ClientConnInterface) GameClient {
-	return &gameClient{cc}
+func NewComunicationClient(cc grpc.ClientConnInterface) ComunicationClient {
+	return &comunicationClient{cc}
 }
 
-func (c *gameClient) JoinGame(ctx context.Context, in *JoinRequest, opts ...grpc.CallOption) (*JoinReply, error) {
-	out := new(JoinReply)
-	err := c.cc.Invoke(ctx, "/helloworld.Game/JoinGame", in, out, opts...)
+func (c *comunicationClient) Comands_Informantes_Broker(ctx context.Context, in *ComandIBRequest, opts ...grpc.CallOption) (*ComandIBReply, error) {
+	out := new(ComandIBReply)
+	err := c.cc.Invoke(ctx, "/helloworld.Comunication/Comands_Informantes_Broker", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gameClient) BeginGame(ctx context.Context, in *BeginRequest, opts ...grpc.CallOption) (*BeginReply, error) {
-	out := new(BeginReply)
-	err := c.cc.Invoke(ctx, "/helloworld.Game/BeginGame", in, out, opts...)
+func (c *comunicationClient) Comands_Leia_Broker(ctx context.Context, in *ComandLBRequest, opts ...grpc.CallOption) (*ComandLBReply, error) {
+	out := new(ComandLBReply)
+	err := c.cc.Invoke(ctx, "/helloworld.Comunication/Comands_Leia_Broker", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gameClient) EndGame(ctx context.Context, in *EndRequest, opts ...grpc.CallOption) (*EndReply, error) {
-	out := new(EndReply)
-	err := c.cc.Invoke(ctx, "/helloworld.Game/EndGame", in, out, opts...)
+func (c *comunicationClient) Comands_Broker_Fulcrum(ctx context.Context, in *ComandBFRequest, opts ...grpc.CallOption) (*ComandBFReply, error) {
+	out := new(ComandBFReply)
+	err := c.cc.Invoke(ctx, "/helloworld.Comunication/Comands_Broker_Fulcrum", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gameClient) BeginStage(ctx context.Context, in *BeginStageRequest, opts ...grpc.CallOption) (*BeginStageReply, error) {
-	out := new(BeginStageReply)
-	err := c.cc.Invoke(ctx, "/helloworld.Game/BeginStage", in, out, opts...)
+func (c *comunicationClient) Comands_Informantes_Fulcrum(ctx context.Context, in *ComandIFRequest, opts ...grpc.CallOption) (*ComandIFReply, error) {
+	out := new(ComandIFReply)
+	err := c.cc.Invoke(ctx, "/helloworld.Comunication/Comands_Informantes_Fulcrum", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gameClient) BeginRound(ctx context.Context, in *PingMsg, opts ...grpc.CallOption) (*BeginRoundReply, error) {
-	out := new(BeginRoundReply)
-	err := c.cc.Invoke(ctx, "/helloworld.Game/BeginRound", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gameClient) SendJugadaE1(ctx context.Context, in *JugadaE1, opts ...grpc.CallOption) (*PlayerStatusE1, error) {
-	out := new(PlayerStatusE1)
-	err := c.cc.Invoke(ctx, "/helloworld.Game/SendJugadaE1", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gameClient) SendJugadaE2(ctx context.Context, in *JugadaE2, opts ...grpc.CallOption) (*PingMsg, error) {
-	out := new(PingMsg)
-	err := c.cc.Invoke(ctx, "/helloworld.Game/SendJugadaE2", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gameClient) SendJugadaE3(ctx context.Context, in *JugadaE3, opts ...grpc.CallOption) (*PingMsg, error) {
-	out := new(PingMsg)
-	err := c.cc.Invoke(ctx, "/helloworld.Game/SendJugadaE3", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gameClient) IsAlready(ctx context.Context, in *PingMsg, opts ...grpc.CallOption) (*PlayerStatusE2, error) {
-	out := new(PlayerStatusE2)
-	err := c.cc.Invoke(ctx, "/helloworld.Game/IsAlready", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gameClient) IsAlready2(ctx context.Context, in *PingMsg, opts ...grpc.CallOption) (*PlayerStatusE3, error) {
-	out := new(PlayerStatusE3)
-	err := c.cc.Invoke(ctx, "/helloworld.Game/IsAlready2", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gameClient) SendJugadas(ctx context.Context, in *StagePlays, opts ...grpc.CallOption) (*StoredReply, error) {
-	out := new(StoredReply)
-	err := c.cc.Invoke(ctx, "/helloworld.Game/SendJugadas", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// GameServer is the server API for Game service.
-// All implementations must embed UnimplementedGameServer
+// ComunicationServer is the server API for Comunication service.
+// All implementations must embed UnimplementedComunicationServer
 // for forward compatibility
-type GameServer interface {
-	// Sends Join game
-	JoinGame(context.Context, *JoinRequest) (*JoinReply, error)
-	BeginGame(context.Context, *BeginRequest) (*BeginReply, error)
-	// Sends end game
-	EndGame(context.Context, *EndRequest) (*EndReply, error)
-	// Begin Stage
-	BeginStage(context.Context, *BeginStageRequest) (*BeginStageReply, error)
-	BeginRound(context.Context, *PingMsg) (*BeginRoundReply, error)
-	SendJugadaE1(context.Context, *JugadaE1) (*PlayerStatusE1, error)
-	SendJugadaE2(context.Context, *JugadaE2) (*PingMsg, error)
-	SendJugadaE3(context.Context, *JugadaE3) (*PingMsg, error)
-	IsAlready(context.Context, *PingMsg) (*PlayerStatusE2, error)
-	IsAlready2(context.Context, *PingMsg) (*PlayerStatusE3, error)
-	SendJugadas(context.Context, *StagePlays) (*StoredReply, error)
-	mustEmbedUnimplementedGameServer()
+type ComunicationServer interface {
+	// Sends Comands_Informantes
+	Comands_Informantes_Broker(context.Context, *ComandIBRequest) (*ComandIBReply, error)
+	// Sends Comands_Leia
+	Comands_Leia_Broker(context.Context, *ComandLBRequest) (*ComandLBReply, error)
+	// Sends Comands_Broker_Fulcrum
+	Comands_Broker_Fulcrum(context.Context, *ComandBFRequest) (*ComandBFReply, error)
+	// Sends Comandas_Informantes_Fulcrum
+	Comands_Informantes_Fulcrum(context.Context, *ComandIFRequest) (*ComandIFReply, error)
+	mustEmbedUnimplementedComunicationServer()
 }
 
-// UnimplementedGameServer must be embedded to have forward compatible implementations.
-type UnimplementedGameServer struct {
+// UnimplementedComunicationServer must be embedded to have forward compatible implementations.
+type UnimplementedComunicationServer struct {
 }
 
-func (UnimplementedGameServer) JoinGame(context.Context, *JoinRequest) (*JoinReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method JoinGame not implemented")
+func (UnimplementedComunicationServer) Comands_Informantes_Broker(context.Context, *ComandIBRequest) (*ComandIBReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Comands_Informantes_Broker not implemented")
 }
-func (UnimplementedGameServer) BeginGame(context.Context, *BeginRequest) (*BeginReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BeginGame not implemented")
+func (UnimplementedComunicationServer) Comands_Leia_Broker(context.Context, *ComandLBRequest) (*ComandLBReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Comands_Leia_Broker not implemented")
 }
-func (UnimplementedGameServer) EndGame(context.Context, *EndRequest) (*EndReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method EndGame not implemented")
+func (UnimplementedComunicationServer) Comands_Broker_Fulcrum(context.Context, *ComandBFRequest) (*ComandBFReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Comands_Broker_Fulcrum not implemented")
 }
-func (UnimplementedGameServer) BeginStage(context.Context, *BeginStageRequest) (*BeginStageReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BeginStage not implemented")
+func (UnimplementedComunicationServer) Comands_Informantes_Fulcrum(context.Context, *ComandIFRequest) (*ComandIFReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Comands_Informantes_Fulcrum not implemented")
 }
-func (UnimplementedGameServer) BeginRound(context.Context, *PingMsg) (*BeginRoundReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BeginRound not implemented")
-}
-func (UnimplementedGameServer) SendJugadaE1(context.Context, *JugadaE1) (*PlayerStatusE1, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendJugadaE1 not implemented")
-}
-func (UnimplementedGameServer) SendJugadaE2(context.Context, *JugadaE2) (*PingMsg, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendJugadaE2 not implemented")
-}
-func (UnimplementedGameServer) SendJugadaE3(context.Context, *JugadaE3) (*PingMsg, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendJugadaE3 not implemented")
-}
-func (UnimplementedGameServer) IsAlready(context.Context, *PingMsg) (*PlayerStatusE2, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method IsAlready not implemented")
-}
-func (UnimplementedGameServer) IsAlready2(context.Context, *PingMsg) (*PlayerStatusE3, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method IsAlready2 not implemented")
-}
-func (UnimplementedGameServer) SendJugadas(context.Context, *StagePlays) (*StoredReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendJugadas not implemented")
-}
-func (UnimplementedGameServer) mustEmbedUnimplementedGameServer() {}
+func (UnimplementedComunicationServer) mustEmbedUnimplementedComunicationServer() {}
 
-// UnsafeGameServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to GameServer will
+// UnsafeComunicationServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ComunicationServer will
 // result in compilation errors.
-type UnsafeGameServer interface {
-	mustEmbedUnimplementedGameServer()
+type UnsafeComunicationServer interface {
+	mustEmbedUnimplementedComunicationServer()
 }
 
-func RegisterGameServer(s grpc.ServiceRegistrar, srv GameServer) {
-	s.RegisterService(&Game_ServiceDesc, srv)
+func RegisterComunicationServer(s grpc.ServiceRegistrar, srv ComunicationServer) {
+	s.RegisterService(&Comunication_ServiceDesc, srv)
 }
 
-func _Game_JoinGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(JoinRequest)
+func _Comunication_Comands_Informantes_Broker_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ComandIBRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GameServer).JoinGame(ctx, in)
+		return srv.(ComunicationServer).Comands_Informantes_Broker(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/helloworld.Game/JoinGame",
+		FullMethod: "/helloworld.Comunication/Comands_Informantes_Broker",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GameServer).JoinGame(ctx, req.(*JoinRequest))
+		return srv.(ComunicationServer).Comands_Informantes_Broker(ctx, req.(*ComandIBRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Game_BeginGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BeginRequest)
+func _Comunication_Comands_Leia_Broker_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ComandLBRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GameServer).BeginGame(ctx, in)
+		return srv.(ComunicationServer).Comands_Leia_Broker(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/helloworld.Game/BeginGame",
+		FullMethod: "/helloworld.Comunication/Comands_Leia_Broker",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GameServer).BeginGame(ctx, req.(*BeginRequest))
+		return srv.(ComunicationServer).Comands_Leia_Broker(ctx, req.(*ComandLBRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Game_EndGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EndRequest)
+func _Comunication_Comands_Broker_Fulcrum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ComandBFRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GameServer).EndGame(ctx, in)
+		return srv.(ComunicationServer).Comands_Broker_Fulcrum(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/helloworld.Game/EndGame",
+		FullMethod: "/helloworld.Comunication/Comands_Broker_Fulcrum",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GameServer).EndGame(ctx, req.(*EndRequest))
+		return srv.(ComunicationServer).Comands_Broker_Fulcrum(ctx, req.(*ComandBFRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Game_BeginStage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BeginStageRequest)
+func _Comunication_Comands_Informantes_Fulcrum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ComandIFRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GameServer).BeginStage(ctx, in)
+		return srv.(ComunicationServer).Comands_Informantes_Fulcrum(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/helloworld.Game/BeginStage",
+		FullMethod: "/helloworld.Comunication/Comands_Informantes_Fulcrum",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GameServer).BeginStage(ctx, req.(*BeginStageRequest))
+		return srv.(ComunicationServer).Comands_Informantes_Fulcrum(ctx, req.(*ComandIFRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Game_BeginRound_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PingMsg)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GameServer).BeginRound(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/helloworld.Game/BeginRound",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GameServer).BeginRound(ctx, req.(*PingMsg))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Game_SendJugadaE1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(JugadaE1)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GameServer).SendJugadaE1(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/helloworld.Game/SendJugadaE1",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GameServer).SendJugadaE1(ctx, req.(*JugadaE1))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Game_SendJugadaE2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(JugadaE2)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GameServer).SendJugadaE2(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/helloworld.Game/SendJugadaE2",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GameServer).SendJugadaE2(ctx, req.(*JugadaE2))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Game_SendJugadaE3_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(JugadaE3)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GameServer).SendJugadaE3(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/helloworld.Game/SendJugadaE3",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GameServer).SendJugadaE3(ctx, req.(*JugadaE3))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Game_IsAlready_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PingMsg)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GameServer).IsAlready(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/helloworld.Game/IsAlready",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GameServer).IsAlready(ctx, req.(*PingMsg))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Game_IsAlready2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PingMsg)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GameServer).IsAlready2(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/helloworld.Game/IsAlready2",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GameServer).IsAlready2(ctx, req.(*PingMsg))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Game_SendJugadas_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(StagePlays)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GameServer).SendJugadas(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/helloworld.Game/SendJugadas",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GameServer).SendJugadas(ctx, req.(*StagePlays))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// Game_ServiceDesc is the grpc.ServiceDesc for Game service.
+// Comunication_ServiceDesc is the grpc.ServiceDesc for Comunication service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Game_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "helloworld.Game",
-	HandlerType: (*GameServer)(nil),
+var Comunication_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "helloworld.Comunication",
+	HandlerType: (*ComunicationServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "JoinGame",
-			Handler:    _Game_JoinGame_Handler,
+			MethodName: "Comands_Informantes_Broker",
+			Handler:    _Comunication_Comands_Informantes_Broker_Handler,
 		},
 		{
-			MethodName: "BeginGame",
-			Handler:    _Game_BeginGame_Handler,
+			MethodName: "Comands_Leia_Broker",
+			Handler:    _Comunication_Comands_Leia_Broker_Handler,
 		},
 		{
-			MethodName: "EndGame",
-			Handler:    _Game_EndGame_Handler,
+			MethodName: "Comands_Broker_Fulcrum",
+			Handler:    _Comunication_Comands_Broker_Fulcrum_Handler,
 		},
 		{
-			MethodName: "BeginStage",
-			Handler:    _Game_BeginStage_Handler,
-		},
-		{
-			MethodName: "BeginRound",
-			Handler:    _Game_BeginRound_Handler,
-		},
-		{
-			MethodName: "SendJugadaE1",
-			Handler:    _Game_SendJugadaE1_Handler,
-		},
-		{
-			MethodName: "SendJugadaE2",
-			Handler:    _Game_SendJugadaE2_Handler,
-		},
-		{
-			MethodName: "SendJugadaE3",
-			Handler:    _Game_SendJugadaE3_Handler,
-		},
-		{
-			MethodName: "IsAlready",
-			Handler:    _Game_IsAlready_Handler,
-		},
-		{
-			MethodName: "IsAlready2",
-			Handler:    _Game_IsAlready2_Handler,
-		},
-		{
-			MethodName: "SendJugadas",
-			Handler:    _Game_SendJugadas_Handler,
+			MethodName: "Comands_Informantes_Fulcrum",
+			Handler:    _Comunication_Comands_Informantes_Fulcrum_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
