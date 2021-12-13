@@ -86,16 +86,11 @@ func main() {
 		fmt.Println("\nIngresar comando: ")
 
 		// El escáner puede escanear entradas por líneas
-		sc := bufio.NewScanner(os.Stdin)
-		for sc.Scan() {
-			comand := sc.Text()
-			fmt.Printf("Entrada: %s\n", comand)
-		}
 
+		inputReader := bufio.NewReader(os.Stdin)
+		comand, _ := inputReader.ReadString('\n')
+		fmt.Println(comand)
 		splited := strings.Split(comand, " ")
-
-		fmt.Println("command: ", comand)
-		fmt.Println("c")
 
 		nombre_planeta := splited[0]
 		nombre_ciudad := splited[1]
