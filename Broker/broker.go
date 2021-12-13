@@ -15,7 +15,7 @@ type server struct {
 	pb.UnimplementedComunicationServer
 }
 
-func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandsIBRequest) (*pb.ComandsIBReply, error) {
+func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIBRequest) (*pb.ComandIBReply, error) {
 	rand.Seed(time.Now().UnixNano())
 	log.Printf("Comand Received: %v", in.GetComand())
 	reloj_vector_Informante := in.GetRelojVector()
@@ -47,7 +47,7 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandsI
 
 	}
 
-	return &pb.ComandsIBReply{IP: ip}, nil
+	return &pb.ComandIBReply{IP: ip}, nil
 }
 
 const (
