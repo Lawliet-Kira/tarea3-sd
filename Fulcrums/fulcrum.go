@@ -117,7 +117,7 @@ func AddCity(planeta string, ciudad string, valor string) string {
 	dataByte := []byte(planeta + " " + ciudad + " " + valor + "\n")
 
 	// Escribir contenido en el archivo
-	err := ioutil.WriteFile(path, dataByte, 0777)
+	err = ioutil.WriteFile(path, dataByte, 0777)
 
 	// log Error
 	if err != nil {

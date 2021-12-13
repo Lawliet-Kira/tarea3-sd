@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	pb "lab3/game/helloworld"
 	"log"
 
@@ -12,6 +13,8 @@ const (
 	BrokerAddress = "10.6.43.116:50051"
 	defaultName   = "world"
 )
+
+var opcion = ""
 
 func main() {
 	// Crear un gRPC canal para comunicarse con el servidor
@@ -28,5 +31,11 @@ func main() {
 	client := pb.NewComunicationClient(conn)
 	// Contact the server and psirint out its response.
 	ctx := context.Background()
+
+	for opcion != "exit" {
+		// MENÚ
+		fmt.Println("Ingrese Operación: ")
+		fmt.Println("	1. Añadir Ciudad")
+	}
 
 }
