@@ -276,7 +276,7 @@ func DeleteCity(planeta string, ciudad string) string {
 
 }
 
-func EscribirLog(operacion string, planeta string, ciudad string, valor string) {
+/*func EscribirLog(operacion string, planeta string, ciudad string, valor string) {
 
 	path, err := os.Getwd()
 
@@ -289,7 +289,7 @@ func EscribirLog(operacion string, planeta string, ciudad string, valor string) 
 
 	createFile(path)
 
-}
+}*/
 
 func (s *server) Comands_Informantes_Fulcrum(ctx context.Context, in *pb.ComandIFRequest) (*pb.ComandIFReply, error) {
 
