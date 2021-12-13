@@ -352,7 +352,8 @@ func GetNumberRebelds(planeta string, ciudad string) string {
 	lines := strings.Split(string(input), "\n")
 
 	for _, line := range lines {
-		fmt.Println("line ->", line)
+		fmt.Println("line ->(", line, ")")
+		fmt.Println("ciudad ->(", ciudad, ")")
 		if strings.Contains(line, ciudad) {
 			split_line := strings.Split(line, " ")
 			fmt.Println("1 ->", split_line[0])
