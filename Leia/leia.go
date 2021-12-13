@@ -28,4 +28,5 @@ func main() {
 	client := pb.NewComunicationClient(conn)
 	// Contact the server and psirint out its response.
 	ctx := context.Background()
+
 }
