@@ -87,8 +87,13 @@ func main() {
 		fmt.Scanf("%s\n", &comand)
 		splited := strings.Split(comand, " ")
 
+		fmt.Println("command: %s\n", comand)
+
 		nombre_planeta := splited[0]
 		nombre_ciudad := splited[1]
+
+		fmt.Println("nombrePlaneta: ", nombre_planeta)
+		fmt.Println("nombreCiudad: ", nombre_ciudad)
 
 		if len(splited) == 3 {
 			valor = splited[2]
