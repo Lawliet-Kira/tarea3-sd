@@ -57,6 +57,12 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIB
 	return &pb.ComandIBReply{Ip: ip}, nil
 }
 
+func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest) (*pb.ComandLBReply, error) {
+	rand.Seed(time.Now().UnixNano())
+
+	return &pb.ComandIBReply{Ip: ip}, nil
+}
+
 const (
 	port           = ":50051"
 	BrokenAddress  = "10.6.43.116:50052"

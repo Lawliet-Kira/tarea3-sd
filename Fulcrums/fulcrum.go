@@ -135,6 +135,8 @@ func UpdateName(planeta string, ciudad string, valor string) string {
 
 	path = path + "/planetas/" + planeta + ".txt"
 
+	fmt.Println("current path: ", path)
+
 	//Abrir archivo
 	input, err := ioutil.ReadFile(path)
 
@@ -165,8 +167,9 @@ func UpdateName(planeta string, ciudad string, valor string) string {
 		return "error"
 	}
 
-	index := findHashing(planeta)
-	Hashing[index].vector[idFulcrum]++
+	// index := findHashing(planeta)
+
+	// Hashing[index].vector[idFulcrum]++
 
 	return "success"
 
