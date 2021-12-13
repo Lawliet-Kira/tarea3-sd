@@ -90,7 +90,7 @@ func AddCity(planeta string, ciudad string, valor string) resustring {
 
 	//Abrir archivo y escribir al final
 	if valor == nil {
-		valor = 0
+		valor = "0"
 	}
 	var f, err = os.OpenFile("/planetas/"+planeta+".txt", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
