@@ -91,8 +91,10 @@ func AddCity(planeta string, ciudad string, valor string) string {
 	if _, err := os.Stat(path); err == nil {
 
 		// path/to/whatever exists
+		fmt.Println("El archivo existe")
 		index := findHashing(planeta)
 		Hashing[index].vector[idFulcrum]++
+		log.Println(Hashing[index].vector)
 
 	} else if errors.Is(err, os.ErrNotExist) {
 
@@ -175,11 +177,14 @@ func UpdateName(planeta string, ciudad string, valor string) string {
 		return "error"
 	}
 
-	/*index := findHashing(planeta)
+	index := findHashing(planeta)
+	if index != -1 {
+		Hashing[index].vector[idFulcrum]++
+		log.Println(Hashing[index].vector)
+		return "success"
+	}
 
-	Hashing[index].vector[idFulcrum]++*/
-
-	return "success"
+	return "error"
 
 }
 
@@ -224,10 +229,14 @@ func UpdateNumber(planeta string, ciudad string, valor string) string {
 		return "error"
 	}
 
-	// index := findHashing(planeta)
-	// Hashing[index].vector[idFulcrum]++
+	index := findHashing(planeta)
+	if index != -1 {
+		Hashing[index].vector[idFulcrum]++
+		log.Println(Hashing[index].vector)
+		return "success"
+	}
 
-	return "success"
+	return "error"
 
 }
 
@@ -271,10 +280,14 @@ func DeleteCity(planeta string, ciudad string) string {
 		return "error"
 	}
 
-	//index := findHashing(planeta)
-	//Hashing[index].vector[idFulcrum]++
+	index := findHashing(planeta)
+	if index != -1 {
+		Hashing[index].vector[idFulcrum]++
+		log.Println(Hashing[index].vector)
+		return "success"
+	}
 
-	return "success"
+	return "error"
 
 }
 
