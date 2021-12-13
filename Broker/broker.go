@@ -14,7 +14,7 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandsI
 	rand.Seed(time.Now().UnixNano())
 	log.Printf("Comand Received: %v", in.GetComand())
 	reloj_vector_Informante := in.GetRelojVector()
-	var ip = ""; 
+	var ip = ""
 
 	if len(reloj_vector_Informante) == 0 {
 		Rand_num := rand.Intn(3)
@@ -27,18 +27,17 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandsI
 		if Rand_num == 2 {
 			ip = Server3Address
 		}
-	}
-	else{
+	} else {
 		//AQUÍ HAY QUE ENVIAR MENSAJE A FULCRUMS TAL QUE ME RETORNE SUS RELOJES DE VECTORES
 
-		/* CODIGO */	
+		/* CODIGO */
 
 		/*reloj_vector_s1 := rvs1
 		reloj_vector_s2 := rvs2
 		reloj_vector_s3 := rvs3*/
 
 		//AQUÍ SE COMPARAN LOS RELOJES PARA VER CUAL SERVER ES EL QUE CUMPLE CON "READ YOUR WRITES
-		
+
 		/*CODIGO*/
 
 	}
