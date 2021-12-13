@@ -169,9 +169,9 @@ func UpdateName(planeta string, ciudad string, valor string) string {
 		return "error"
 	}
 
-	// index := findHashing(planeta)
+	index := findHashing(planeta)
 
-	// Hashing[index].vector[idFulcrum]++
+	Hashing[index].vector[idFulcrum]++
 
 	return "success"
 
@@ -218,8 +218,8 @@ func UpdateNumber(planeta string, ciudad string, valor string) string {
 		return "error"
 	}
 
-	index := findHashing(planeta)
-	Hashing[index].vector[idFulcrum]++
+	// index := findHashing(planeta)
+	// Hashing[index].vector[idFulcrum]++
 
 	return "success"
 
@@ -265,8 +265,8 @@ func DeleteCity(planeta string, ciudad string) string {
 		return "error"
 	}
 
-	index := findHashing(planeta)
-	Hashing[index].vector[idFulcrum]++
+	//index := findHashing(planeta)
+	//Hashing[index].vector[idFulcrum]++
 
 	return "success"
 
@@ -301,19 +301,19 @@ func (s *server) Comands_Informantes_Fulcrum(ctx context.Context, in *pb.ComandI
 
 	// LOGICA DE ADDCITY
 	case "1":
-		AddCity(planeta, ciudad, valor)
+		fmt.Println(AddCity(planeta, ciudad, valor))
 
 	// LOGICA DE UPDATE NAME
 	case "2":
-		UpdateName(planeta, ciudad, valor)
+		fmt.Println(UpdateName(planeta, ciudad, valor))
 
 	// LOGICA UPDATE NUMBER
 	case "3":
-		UpdateNumber(planeta, ciudad, valor)
+		fmt.Prinln(UpdateNumber(planeta, ciudad, valor))
 
 	// LOGICA DELETE CITY
 	case "4":
-		DeleteCity(planeta, ciudad)
+		fmt.Prinln(DeleteCity(planeta, ciudad))
 
 	}
 

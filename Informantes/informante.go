@@ -82,7 +82,6 @@ func main() {
 
 		// clean the prompt
 		CallClear()
-
 		fmt.Println("\nIngresar comando: ")
 
 		// El escáner puede escanear entradas por líneas

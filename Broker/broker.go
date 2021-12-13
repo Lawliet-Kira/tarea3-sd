@@ -62,6 +62,7 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 	log.Printf("Operacion Received: %v", in.GetOperacion())
 	reloj_vector_Leia := in.GetRelojVector()
 	var ip = ""
+	var cant_soldados = "0"
 
 	if len(reloj_vector_Informante) == 0 {
 
@@ -83,9 +84,22 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 
 	// REALIZAR CONEXION CON SERVIDORES
 
-	//DEBUG
+	ip = Server2Address
 
-	ip = "10.6.43.114:50052"
+	conn, err := grpc.Dial(Server2Address, grpc.WithInsecure(), grpc.WithBlock())
+
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+
+	defer conn.Close()
+
+	// Client Stub to perform RPCs
+	client := pb.NewComunicationClient(conn)
+	// Contact the server and psirint out its response.
+	ctx := context.Background()
+
+	//DEBUG
 
 	return &pb.ComandIBReply{Ip: ip}, nil
 }
