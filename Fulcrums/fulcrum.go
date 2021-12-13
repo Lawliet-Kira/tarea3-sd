@@ -15,6 +15,8 @@ import (
 	"google.golang.org/grpc"
 )
 
+var idFulcrum int
+
 type server struct {
 	pb.UnimplementedComunicationServer
 }
@@ -39,16 +41,15 @@ func newKeyvalue(planeta string) *Keyvalue {
 }
 
 //Encuentra la posicion en la que se encuentra el planeta deseado en la lista de Keyvalues
-func findHashing(planeta string) int32 {
+func findHashing(planeta string) int {
 
-	var cont int32 = 0
-
-	for _, planet := range Hashing {
-		if planet.planeta == planeta {
-			return cont
+	for i, keyvalue := range Hashing {
+		if keyvalue.planeta == planeta {
+			fmt.Println("Planeta encontrado")
+			return i
 		}
-		cont += 1
 	}
+
 	return -1
 
 }
@@ -100,6 +101,7 @@ func AddCity(planeta string, ciudad string, valor string) string {
 		Hashing = append(Hashing, *newKeyvalue(planeta))
 		index := findHashing(planeta)
 		Hashing[index].vector[idFulcrum]++
+		log.Println(Hashing[index].vector)
 
 	}
 
@@ -461,8 +463,6 @@ func listenFunction() {
 const (
 	port = ":50052"
 )
-
-var idFulcrum int
 
 func main() {
 
