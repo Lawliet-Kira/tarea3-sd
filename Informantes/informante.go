@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	address     = "10.6.43.113:50051"
-	defaultName = "world"
+	BrokerAddress = "10.6.43.116:50051"
+	defaultName   = "world"
 )
 
 var opcion = ""
@@ -21,7 +21,7 @@ var reloj_vector_Informante []int32
 func main() {
 	// Crear un gRPC canal para comunicarse con el servidor
 	// 	-> Esto se crea pasando server address y port number a grpc.Dial()
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(BrokerAddress, grpc.WithInsecure(), grpc.WithBlock())
 
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -34,7 +34,7 @@ func main() {
 	// Contact the server and psirint out its response.
 	ctx := context.Background()
 	//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-
+	fmt.Println("Escoge a:")
 	for opcion != "exit" {
 
 		var opcion string
