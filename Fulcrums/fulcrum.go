@@ -108,20 +108,23 @@ func AddCity(planeta string, ciudad string, valor string) string {
 		valor = "0"
 	}
 
-	dataByte := []byte(planeta + " " + ciudad + " " + valor + "\n")
+	text := planeta + " " + ciudad + " " + valor + "\n"
 
-	// Escribir contenido en el archivo
-	err = ioutil.WriteFile(path, dataByte, 0777)
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 
-	// log Error
 	if err != nil {
 		log.Fatalln(err)
 		return "error"
 	}
 
-	result := "success"
+	defer f.Close()
 
-	return result
+	if _, err = f.WriteString(text); err != nil {
+		log.Fatalln(err)
+		return "error"
+	}
+
+	return "success"
 
 }
 
@@ -273,6 +276,21 @@ func DeleteCity(planeta string, ciudad string) string {
 
 }
 
+func EscribirLog(operacion string, planeta string, ciudad string, valor string) {
+
+	path, err := os.Getwd()
+
+	if err != nil {
+		log.Println(err)
+		return "error"
+	}
+
+	path = path + "/planetas/" + planeta + ".txt"
+
+	createFile(path)
+
+}
+
 func (s *server) Comands_Informantes_Fulcrum(ctx context.Context, in *pb.ComandIFRequest) (*pb.ComandIFReply, error) {
 
 	// CHANGE
@@ -303,19 +321,22 @@ func (s *server) Comands_Informantes_Fulcrum(ctx context.Context, in *pb.ComandI
 	// LOGICA DE ADDCITY
 	case "1":
 		fmt.Println(AddCity(planeta, ciudad, valor))
+		//Escribir en el log
 
 	// LOGICA DE UPDATE NAME
 	case "2":
 		fmt.Println(UpdateName(planeta, ciudad, valor))
+		//Escribir en el log
 
 	// LOGICA UPDATE NUMBER
 	case "3":
 		fmt.Println(UpdateNumber(planeta, ciudad, valor))
+		//Escribir en el log
 
 	// LOGICA DELETE CITY
 	case "4":
 		fmt.Println(DeleteCity(planeta, ciudad))
-
+		//Escribir en el log
 	}
 
 	// VERIFICAR SI EXISTE EL ARCHIVO LOGS DE REGISTROS
