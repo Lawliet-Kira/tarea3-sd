@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	pb "lab3/game/helloworld"
 	"log"
 	"math/rand"
 	"net"
@@ -9,6 +10,10 @@ import (
 
 	"google.golang.org/grpc"
 )
+
+type server struct {
+	pb.UnimplementedComunicationServer
+}
 
 func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandsIBRequest) (*pb.ComandsIBReply, error) {
 	rand.Seed(time.Now().UnixNano())
