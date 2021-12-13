@@ -59,6 +59,29 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIB
 
 func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest) (*pb.ComandLBReply, error) {
 	rand.Seed(time.Now().UnixNano())
+	log.Printf("Operacion Received: %v", in.GetOperacion())
+	reloj_vector_Leia := in.GetRelojVector()
+	var ip = ""
+
+	if len(reloj_vector_Informante) == 0 {
+
+		Rand_num := rand.Intn(3)
+
+		if Rand_num == 0 {
+			ip = Server1Address
+		}
+		if Rand_num == 1 {
+			ip = Server2Address
+		}
+		if Rand_num == 2 {
+			ip = Server3Address
+		}
+
+	} else {
+		/*CODE*/
+	}
+
+	// REALIZAR CONEXION
 
 	return &pb.ComandIBReply{Ip: ip}, nil
 }
