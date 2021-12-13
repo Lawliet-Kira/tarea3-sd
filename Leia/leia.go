@@ -15,6 +15,7 @@ const (
 )
 
 var opcion = ""
+var reloj_vector_Informante []int32
 
 func main() {
 	// Crear un gRPC canal para comunicarse con el servidor
@@ -35,7 +36,7 @@ func main() {
 	for opcion != "exit" {
 		// MENÚ
 		fmt.Println("Ingrese Operación: ")
-		fmt.Println("	1. Añadir Ciudad")
+		fmt.Println("	1. Obtener rebeldes")
 	}
 
 }

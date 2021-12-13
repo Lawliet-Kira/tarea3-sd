@@ -88,7 +88,7 @@ func AddCity(planeta string, ciudad string, valor string) string {
 
 	fmt.Println("current path: ", path)
 
-	path = path + "../planetas/" + planeta + ".txt"
+	path = path + "/planetas/" + planeta + ".txt"
 
 	fmt.Println("current path2: ", path)
 
