@@ -351,7 +351,7 @@ func GetNumberRebelds(planeta string, ciudad string) string {
 
 	lines := strings.Split(string(input), "\n")
 
-	for i, line := range lines {
+	for _, line := range lines {
 		if strings.Contains(line, ciudad) {
 			split_line := strings.Split(line, " ")
 			cant_rebeldes = split_line[2]
@@ -366,7 +366,6 @@ func (s *server) Comands_Broker_Fulcrum(ctx context.Context, in *pb.ComandBFRequ
 	// CHANGE
 	reloj_vector_s := []int32{1, 0, 1}
 
-	operacion := in.GetOperacion()
 	planeta := in.GetNombrePlaneta()
 	ciudad := in.GetNombreCiudad()
 	localip := in.GetIp()
