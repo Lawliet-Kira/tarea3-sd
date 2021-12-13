@@ -64,7 +64,10 @@ message ComandLBReply {
 }
 
 message ComandBFRequest {
-  string comand = 1; // GetNumberRebelds
+  string operacion = 1; // GetNumberRebelds
+  string nombre_planeta = 2;
+  string nombre_ciudad = 3;
+  string ip = 4;
 }
 
 message ComandBFReply {

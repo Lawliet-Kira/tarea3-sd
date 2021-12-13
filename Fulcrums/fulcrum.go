@@ -327,6 +327,64 @@ func (s *server) Comands_Informantes_Fulcrum(ctx context.Context, in *pb.ComandI
 
 }
 
+func GetNumberRebelds(planeta string, ciudad string) string {
+
+	var cant_rebeldes = ""
+
+	path, err := os.Getwd()
+
+	if err != nil {
+		log.Println(err)
+		return "error"
+	}
+
+	path = path + "/planetas/" + planeta + ".txt"
+
+	//Abrir archivo
+	input, err := ioutil.ReadFile(path)
+
+	if err != nil {
+		log.Fatalln(err)
+		return "error"
+	}
+
+	lines := strings.Split(string(input), "\n")
+
+	for i, line := range lines {
+		if strings.Contains(line, ciudad) {
+			split_line := strings.Split(line, " ")
+			cant_rebeldes = split_line[2]
+		}
+	}
+
+	return cant_rebeldes
+}
+
+func (s *server) Comands_Broker_Fulcrum(ctx context.Context, in *pb.ComandBFRequest) (*pb.ComandBFReply, error) {
+
+	// CHANGE
+	reloj_vector_s := []int32{1, 0, 1}
+
+	operacion := in.GetOperacion()
+	planeta := in.GetNombrePlaneta()
+	ciudad := in.GetNombreCiudad()
+	localip := in.GetIp()
+
+	switch localip {
+	case "10.6.43.113:50052":
+		idFulcrum = 0
+	case "10.6.43.114:50052":
+		idFulcrum = 1
+	case "10.6.43.115:50052":
+		idFulcrum = 2
+	}
+
+	// LOGICA OPERACION GET
+	cant_rebeldes := GetNumberRebelds(planeta, ciudad)
+
+	return &pb.ComandBFReply{CantRebelds: cant_rebeldes, RelojVector: reloj_vector_s}, nil
+}
+
 const (
 	port = ":50052"
 )

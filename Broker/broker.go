@@ -58,11 +58,14 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIB
 }
 
 func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest) (*pb.ComandLBReply, error) {
+
 	rand.Seed(time.Now().UnixNano())
 	log.Printf("Operacion Received: %v", in.GetOperacion())
 	reloj_vector_Leia := in.GetRelojVector()
 	var ip = ""
 	var cant_soldados = "0"
+
+	// ESCOGER IP QUE CUMPLA CON MONOTONIC READS
 
 	if len(reloj_vector_Informante) == 0 {
 
@@ -99,11 +102,12 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 	// Contact the server and psirint out its response.
 	ctx := context.Background()
 
-	r, _ := client.Comands_Broker_Fulcrum(ctx, &pb.ComandIBRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, Valor: valor, RelojVector: reloj_vector_Informante})
+	r, _ := client.Comands_Broker_Fulcrum(ctx, &pb.ComandBFRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, Ip: ip})
 
-	//DEBUG
+	cant_soldados = r.GetCantRebelds()
+	reloj_vector_Leia = r.GetRelojVector()
 
-	return &pb.ComandIBReply{Ip: ip}, nil
+	return &pb.ComandLBReply{CantRebelds: cant_soldados, RelojVector: reloj_vector_Leia}, nil
 }
 
 const (
