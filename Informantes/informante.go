@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-	"strings"
 
 	"google.golang.org/grpc"
 )
@@ -85,7 +84,7 @@ func main() {
 		fmt.Println("\nIngresar comando: ")
 
 		fmt.Scanf("%s\n", &comand)
-		splited := strings.Split(comand, " ")
+		splited := comand.split(" ")
 
 		fmt.Println("command: ", comand)
 		fmt.Println("c")
