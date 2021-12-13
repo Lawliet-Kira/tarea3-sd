@@ -9,7 +9,6 @@ import (
 	"log"
 	"net"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"google.golang.org/grpc"
@@ -73,24 +72,18 @@ func createFile(path string) {
 
 }
 
-// Temporary directory
-const tmpDir = "../planetas/"
-
 func AddCity(planeta string, ciudad string, valor string) string {
 
 	// "nombre_planeta nombre_ciudad [nuevo_valor]"
-
-	// path := filepath.Join(tmpDir, planeta+".txt")
 	path, err := os.Getwd()
+
 	if err != nil {
 		log.Println(err)
 	}
 
-	fmt.Println("current path: ", path)
-
 	path = path + "/planetas/" + planeta + ".txt"
 
-	fmt.Println("current path2: ", path)
+	fmt.Println("current path: ", path)
 
 	// VERIFICAR QUE EL ARCHIVO EXISTE
 	if _, err := os.Stat(path); err == nil {
@@ -133,7 +126,14 @@ func AddCity(planeta string, ciudad string, valor string) string {
 
 func UpdateName(planeta string, ciudad string, valor string) string {
 
-	path := filepath.Join(tmpDir, "/"+planeta+".txt")
+	path, err := os.Getwd()
+
+	if err != nil {
+		log.Println(err)
+		return "error"
+	}
+
+	path = path + "/planetas/" + planeta + ".txt"
 
 	//Abrir archivo
 	input, err := ioutil.ReadFile(path)
@@ -174,7 +174,14 @@ func UpdateName(planeta string, ciudad string, valor string) string {
 
 func UpdateNumber(planeta string, ciudad string, valor string) string {
 
-	path := filepath.Join(tmpDir, "/"+planeta+".txt")
+	path, err := os.Getwd()
+
+	if err != nil {
+		log.Println(err)
+		return "error"
+	}
+
+	path = path + "/planetas/" + planeta + ".txt"
 
 	// Abrir archivo
 	input, err := ioutil.ReadFile(path)
@@ -215,7 +222,14 @@ func UpdateNumber(planeta string, ciudad string, valor string) string {
 
 func DeleteCity(planeta string, ciudad string) string {
 
-	path := filepath.Join(tmpDir, "/"+planeta+".txt")
+	path, err := os.Getwd()
+
+	if err != nil {
+		log.Println(err)
+		return "error"
+	}
+
+	path = path + "/planetas/" + planeta + ".txt"
 
 	//Abrir archivo
 	input, err := ioutil.ReadFile(path)
