@@ -369,9 +369,6 @@ func (s *server) Comands_Broker_Fulcrum(ctx context.Context, in *pb.ComandBFRequ
 
 	// CHANGE
 	reloj_vector_s := []int32{1, 2, 1}
-
-	fmt.P
-
 	planeta := in.GetNombrePlaneta()
 	ciudad := in.GetNombreCiudad()
 	localip := in.GetIp()
