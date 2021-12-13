@@ -74,7 +74,7 @@ func createFile(path string) {
 }
 
 // Temporary directory
-const tmpDir = "./planetas"
+const tmpDir = "/Fulcrums/planetas"
 
 func AddCity(planeta string, ciudad string, valor string) string {
 
