@@ -77,7 +77,7 @@ func main() {
 		fmt.Println("	3. Actualiar Numero")
 		fmt.Println("	4. Eliminar Ciudad")
 
-		fmt.Scanf("%s\n", operacion)
+		fmt.Scanf("%s\n", &operacion)
 
 		// clean the prompt
 		CallClear()

@@ -18,7 +18,12 @@ type Location struct {
 	planeta string
 	vector  []int32
 }
-
+var Hashing []Location
+func newLocation(planeta string) * Location{
+	var vector := [0,0,0]
+	new := Location{planeta: planeta, vector: }
+	return &new
+}
 func createFile(path string) {
 
 	var _, err = os.Stat(path)
@@ -38,12 +43,32 @@ func createFile(path string) {
 
 }
 
-func AddCity(result string) string {
+func AddCity(planeta string, ciudad string, valor string) (string) {
 
 	// "nombre_planeta nombre_ciudad [nuevo_valor]"
 
 	// VERIFICAR QUE EL ARCHIVO EXISTE
+	if _, err := os.Stat("/planetas/" + planeta + ".txt"); err == nil {
+		// path/to/whatever exists
+	  
+	  } else if errors.Is(err, os.ErrNotExist) {
+		// path/to/whatever does *not* exist
+		createFile("/planetas/" + planeta + ".txt")
+		
+	  }
+	
+	//Abrir archivo y escribir al final
 
+	var f, err = os.OpenFile(planeta + ".txt", os.O_APPEND|os.O_WRONLY, 0644)
+	if isError(err) {
+        return
+    }
+
+	n, err := f.WriteString(planeta + ciudad + valor + "\n")
+	if err != nil {
+		return
+	}
+	result := "success"
 	return result
 }
 
