@@ -48,7 +48,7 @@ func main() {
 
 		fmt.Scanf("%s\n", &opcion)
 
-		r, err := client.Comands_Informantes_Broker(ctx, &pb.ComandIBRequest{Comand: opcion, RelojVector: reloj_vector_Informante})
+		r, _ := client.Comands_Informantes_Broker(ctx, &pb.ComandIBRequest{Comand: opcion, RelojVector: reloj_vector_Informante})
 
 		fmt.Println("Direccion IP seleccionada: ", r)
 	}
