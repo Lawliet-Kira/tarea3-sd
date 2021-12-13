@@ -55,7 +55,9 @@ func main() {
 
 		// Connection with IP Fulcrum
 
-		conn2, err2 := grpc.Dial(r, grpc.WithInsecure(), grpc.WithBlock())
+		FulcrumAddress := r.GetIp()
+
+		conn2, err2 := grpc.Dial(FulcrumAddress, grpc.WithInsecure(), grpc.WithBlock())
 
 		if err2 != nil {
 			log.Fatalf("did not connect: %v", err2)
@@ -63,7 +65,7 @@ func main() {
 
 		client2 := pb.NewComunicationClient(conn2)
 
-		r2, _ := client.Comands_Informantes_Fulcrum(ctx, &pb.ComandIFRequest{Comand: opcion})
+		r2, _ := client2.Comands_Informantes_Fulcrum(ctx, &pb.ComandIFRequest{Comand: opcion})
 
 		fmt.Println("Reply: ", r2)
 
