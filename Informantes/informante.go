@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	pb "lab3/game/helloworld"
@@ -8,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 
 	"google.golang.org/grpc"
 )
@@ -83,8 +85,14 @@ func main() {
 
 		fmt.Println("\nIngresar comando: ")
 
-		fmt.Scanf("%s\n", &comand)
-		splited := comand.split(" ")
+		// El escáner puede escanear entradas por líneas
+		sc := bufio.NewScanner(os.Stdin)
+		for sc.Scan() {
+			comand := sc.Text()
+			fmt.Printf("Entrada: %s\n", comand)
+		}
+
+		splited := strings.Split(comand, " ")
 
 		fmt.Println("command: ", comand)
 		fmt.Println("c")
