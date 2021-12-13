@@ -120,9 +120,7 @@ func main() {
 
 		client2 := pb.NewComunicationClient(conn2)
 
-		fmt.Println("Escribe el comando: ")
-
-		r2, _ := client2.Comands_Informantes_Fulcrum(ctx, &pb.ComandIFRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, Valor: valor})
+		r2, _ := client2.Comands_Informantes_Fulcrum(ctx, &pb.ComandIFRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, Valor: valor, Ip: FulcrumAddress})
 
 		fmt.Println("Reply: ", r2)
 

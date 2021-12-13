@@ -74,8 +74,10 @@ message ComandIFRequest {
   string nombre_planeta = 2;
   string nombre_ciudad = 3;
   string valor = 4;
+  string ip = 5;
 }
 
 message ComandIFReply {
   repeated int32 reloj_vector = 1; // ['x', 'y', 'z']
+  string ip = 2;
 }
