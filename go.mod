@@ -1,4 +1,4 @@
-module lab1/game
+module lab3/game
 
 go 1.16
 

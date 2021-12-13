@@ -14,7 +14,7 @@
 
 syntax = "proto3";
 
-option go_package = "lab1/game/helloworld";
+option go_package = "lab3/game/helloworld";
 option java_multiple_files = true;
 option java_package = "io.grpc.examples.helloworld";
 option java_outer_classname = "HelloWorldProto";
@@ -23,132 +23,52 @@ package helloworld;
 
 // The greeting service definition.
 
-service Game {
-
+service Comunication {
     
-    // Sends Join game
-    rpc JoinGame (JoinRequest) returns (JoinReply) { }
+    // Sends Comands_Informantes
+    rpc Comands_Informantes_Broker (ComandIBRequest) returns (ComandIBReply) { }
 
-    rpc BeginGame (BeginRequest) returns (BeginReply) { }
-    // Sends end game
-    rpc EndGame (EndRequest) returns (EndReply) { }
+    // Sends Comands_Leia
+    rpc Comands_Leia_Broker (ComandLBRequest) returns (ComandLBReply) { }
 
-    // Begin Stage
-    rpc BeginStage (BeginStageRequest) returns (BeginStageReply) { } 
+    // Sends Comands_Broker_Fulcrum
+    rpc Comands_Broker_Fulcrum (ComandBFRequest) returns (ComandBFReply) { }
 
-    rpc BeginRound (PingMsg) returns (BeginRoundReply) { }
+    // Sends Comandas_Informantes_Fulcrum
+    rpc Comands_Informantes_Fulcrum (ComandIFRequest) returns (ComandIFReply) { }
 
-    rpc SendJugadaE1(JugadaE1) returns (PlayerStatusE1) { }
-    
-    rpc SendJugadaE2(JugadaE2) returns (PingMsg) { }
-
-    rpc SendJugadaE3(JugadaE3) returns (PingMsg) { }
-
-    rpc IsAlready(PingMsg) returns (PlayerStatusE2) {}
-
-    rpc IsAlready2(PingMsg) returns (PlayerStatusE3) {}
-
-    rpc SendJugadas(StagePlays) returns (StoredReply){}
-    
-    rpc PullJugadas(PingMsg) returns (StagePlays)
-
-    
-}
-message PingMsg {
-  int32 id = 1;
-}
-// The request message
-message JoinRequest {
-    int32 id = 1;
-    string message = 2;
-    string name = 3;
 }
 
-// The response message
-message JoinReply {
-  int32 id = 1;
-  string message = 2;
+message ComandIBRequest {
+  string Comand = 1; // AddCity, UpdateName, UpdateNumber, DeleteCity
 }
 
-message BeginRequest {
-  int32 id = 1;
-  string message = 2;
+message ComandIBReply {
+  string IP = 1; // Dirección IP de server Fulcrum Aleatoria
 }
 
-message BeginReply {
-  bool message = 1;
-  int32 online = 2;
+message ComandLBRequest {
+  string Comand = 1; // GetNumberRebelds
 }
 
-// End request message
-message EndRequest {
-  int32 id = 1;
-  string message = 2;
+message ComandLBReply {
+  string Cant_Rebelds = 1;
+  repeated int32 reloj_vector = 2; // ['x', 'y', 'z']
 }
 
-// End reply message
-message EndReply {
-  string message = 1;
+message ComandBFRequest {
+  string Comand = 1; // GetNumberRebelds
 }
 
-// BeginStageRequest
-message BeginStageRequest {
-  int32 id = 1;
-  string stage = 2; // enviar la etapa
+message ComandBFReply {
+  string Cant_Rebelds = 1; 
+  repeated int32 reloj_vector = 2; // ['x', 'y', 'z']
 }
 
-// BeginStageReply
-message BeginStageReply {
-  bool stage = 1;
-  bool dead = 2;
+message ComandIFRequest {
+  string Comand = 1; // AddCity, UpdateName, UpdateNumber, DeleteCity
 }
 
-
-// BeginRoundReply
-message BeginRoundReply {
-  bool round = 1;
-}
-
-// JugadaE1
-message JugadaE1 {
-  int32 id = 1;
-  int32 jugada = 2;
-  int32 suma_actual = 3;
-}
-
-
-message PlayerStatusE1 {
-  int32 suma_total = 1;
-  bool dead = 2;
-  int32 ronda = 3;
-}
-
-message JugadaE2 {
-  int32 id = 1;
-  int32 jugada = 2;
-}
-message PlayerStatusE2{
-  bool ready = 1;
-  bool dead = 2;
-}
-
-message JugadaE3 {
-  int32 id = 1;
-  int32 jugada = 2;
-}
-
-message PlayerStatusE3{
-  bool ready = 1;
-  bool dead = 2;
-}
-
-message StagePlays{
-  int32 id = 1;
-  int32 etapa = 2;
-  int32 jugada = 3;
-  repeated int32 jugadasList = 4;
-}
- 
-message StoredReply {
-  string message = 1;
+message ComandIFReply {
+  repeated int32 reloj_vector = 1; // ['x', 'y', 'z']
 }
