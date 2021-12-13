@@ -83,7 +83,9 @@ func main() {
 
 		inputReader := bufio.NewReader(os.Stdin)
 		comand, _ = inputReader.ReadString('\n')
-		fmt.Println(comand)
+
+		comand = strings.TrimSuffix(comand, "\n")
+		fmt.Println("after suffix: ", comand)
 
 		splited := strings.Split(comand, " ")
 
