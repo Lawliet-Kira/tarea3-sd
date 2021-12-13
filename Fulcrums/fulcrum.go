@@ -74,13 +74,13 @@ func createFile(path string) {
 }
 
 // Temporary directory
-const tmpDir = "/Fulcrums/planetas"
+const tmpDir = "planetas/"
 
 func AddCity(planeta string, ciudad string, valor string) string {
 
 	// "nombre_planeta nombre_ciudad [nuevo_valor]"
 
-	path := filepath.Join(tmpDir, "/"+planeta+".txt")
+	path := filepath.Join(tmpDir, planeta+".txt")
 
 	// VERIFICAR QUE EL ARCHIVO EXISTE
 	if _, err := os.Stat(path); err == nil {
