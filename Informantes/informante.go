@@ -88,7 +88,7 @@ func main() {
 		// El escáner puede escanear entradas por líneas
 
 		inputReader := bufio.NewReader(os.Stdin)
-		comand, _ := inputReader.ReadString('\n')
+		comand, _ = inputReader.ReadString('\n')
 		fmt.Println(comand)
 		splited := strings.Split(comand, " ")
 
