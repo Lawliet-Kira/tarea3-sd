@@ -173,9 +173,9 @@ func UpdateName(planeta string, ciudad string, valor string) string {
 		return "error"
 	}
 
-	index := findHashing(planeta)
+	/*index := findHashing(planeta)
 
-	Hashing[index].vector[idFulcrum]++
+	Hashing[index].vector[idFulcrum]++*/
 
 	return "success"
 
@@ -276,7 +276,7 @@ func DeleteCity(planeta string, ciudad string) string {
 
 }
 
-/*func EscribirLog(operacion string, planeta string, ciudad string, valor string) {
+func EscribirLog(operacion string, planeta string, ciudad string, valor string) string {
 
 	path, err := os.Getwd()
 
@@ -285,11 +285,53 @@ func DeleteCity(planeta string, ciudad string) string {
 		return "error"
 	}
 
-	path = path + "/planetas/" + planeta + ".txt"
+	path = path + "/logs/" + planeta + ".txt"
 
+	// VERIFICAR SI EXISTE EL ARCHIVO, SINO CREARLO
 	createFile(path)
 
-}*/
+	//ESCRIBIR EL LOG AL FINAL DEL ARCHIVO
+
+	op := ""
+
+	switch operacion {
+
+	case "1":
+		op = "AddCity"
+	case "2":
+		op = "UpdateName"
+	case "3":
+		op = "UpdateNumber"
+	case "4":
+		op = "DeleteCity"
+	}
+
+	if operacion == 1 && valor == "" {
+		valor = "0"
+	}
+
+	ciudad = strings.TrimSuffix(ciudad, "\n")
+	valor = strings.TrimSuffix(valor, "\n")
+
+	text := op + " " + planeta + " " + ciudad + " " + valor + "\n"
+
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+
+	if err != nil {
+		log.Fatalln(err)
+		return "error"
+	}
+
+	defer f.Close()
+
+	if _, err = f.WriteString(text); err != nil {
+		log.Fatalln(err)
+		return "error"
+	}
+
+	return "success"
+
+}
 
 func (s *server) Comands_Informantes_Fulcrum(ctx context.Context, in *pb.ComandIFRequest) (*pb.ComandIFReply, error) {
 
@@ -321,29 +363,27 @@ func (s *server) Comands_Informantes_Fulcrum(ctx context.Context, in *pb.ComandI
 	// LOGICA DE ADDCITY
 	case "1":
 		fmt.Println(AddCity(planeta, ciudad, valor))
-		//Escribir en el log
 
 	// LOGICA DE UPDATE NAME
 	case "2":
 		fmt.Println(UpdateName(planeta, ciudad, valor))
-		//Escribir en el log
 
 	// LOGICA UPDATE NUMBER
 	case "3":
 		fmt.Println(UpdateNumber(planeta, ciudad, valor))
-		//Escribir en el log
 
 	// LOGICA DELETE CITY
 	case "4":
 		fmt.Println(DeleteCity(planeta, ciudad))
-		//Escribir en el log
 	}
+
+	EscribirLog(operacion, planeta, ciudad, valor)
 
 	// VERIFICAR SI EXISTE EL ARCHIVO LOGS DE REGISTROS
 
 	// DEVOLVER RELOJ ARCHIVO
-	index := findHashing(planeta)
-	reloj_vector_s = Hashing[index].vector
+	/*index := findHashing(planeta)
+	reloj_vector_s = Hashing[index].vector*/
 
 	return &pb.ComandIFReply{RelojVector: reloj_vector_s}, nil
 
