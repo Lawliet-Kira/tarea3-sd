@@ -42,6 +42,7 @@ func newKeyvalue(planeta string) *Keyvalue {
 func findHashing(planeta string) int32 {
 
 	var cont int32 = 0
+
 	for _, planet := range Hashing {
 		if planet.planeta == planeta {
 			return cont
@@ -49,6 +50,7 @@ func findHashing(planeta string) int32 {
 		cont += 1
 	}
 	return -1
+
 }
 
 // Verifica si existe un archivo, en caso contrario lo crea
@@ -72,7 +74,7 @@ func createFile(path string) {
 }
 
 // Temporary directory
-const tmpDir = "/planetas"
+const tmpDir = "./planetas"
 
 func AddCity(planeta string, ciudad string, valor string) string {
 
