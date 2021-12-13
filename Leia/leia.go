@@ -67,7 +67,7 @@ func main() {
 		fmt.Println("nombrePlaneta: ", nombre_planeta)
 		fmt.Println("nombreCiudad: ", nombre_ciudad)
 
-		r, _ := client.Comands_Leia_Broker(ctx, &pb.ComandLBRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad})
+		r, _ := client.Comands_Leia_Broker(ctx, &pb.ComandLBRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, RelojVector: reloj_vector_Leia})
 
 		cant_soldados := r.GetCantRebelds()
 

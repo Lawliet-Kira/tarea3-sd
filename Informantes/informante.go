@@ -90,7 +90,8 @@ func main() {
 		inputReader := bufio.NewReader(os.Stdin)
 		comand, _ = inputReader.ReadString('\n')
 		fmt.Println(comand)
-		splited := strings.Split(comand, " ")
+		// splited := strings.Split(comand, " ")
+		splited := strings.Fields(comand)
 
 		nombre_planeta := splited[0]
 		nombre_ciudad := splited[1]
