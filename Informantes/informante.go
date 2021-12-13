@@ -1,7 +1,22 @@
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	pb "lab3/game/helloworld"
+
+	"google.golang.org/grpc"
+)
+
 const (
 	address     = "10.6.43.113:50051"
 	defaultName = "world"
 )
+
+var opcion = ""
+var reloj_vector_Informante []int32
 
 func main() {
 	// Crear un gRPC canal para comunicarse con el servidor
@@ -15,11 +30,27 @@ func main() {
 	defer conn.Close()
 
 	// Client Stub to perform RPCs
-	client := pb.NewGameClient(conn)
-	message := "HOLA deseo unirme a the game"
+	client := pb.NewComunicationClient(conn)
 	// Contact the server and psirint out its response.
-	name := "Jugador 1"
-	var id int32 = 0
 	ctx := context.Background()
 	//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+
+	for opcion != "exit" {
+
+		var opcion string
+
+		// MENÚ
+		fmt.Println("Escoge la opcion:")
+		fmt.Println("	1. AddCity")
+		fmt.Println("	2. UpdateName")
+		fmt.Println("	3. UpdateNumbre")
+		fmt.Println("	4. DeleteCity")
+
+		fmt.Scanf("%s\n", &opcion)
+
+		r, err := client.Comands_Informantes_Broker(ctx, &pb.ComandIBRequest{Comand: opcion, RelojVector: reloj_vector_Informante})
+
+		fmt.Println("Direccion IP seleccionada: ", r)
+	}
+
 }

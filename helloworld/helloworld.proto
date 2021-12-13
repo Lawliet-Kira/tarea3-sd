@@ -40,36 +40,36 @@ service Comunication {
 }
 
 message ComandIBRequest {
-  string Comand = 1; // AddCity, UpdateName, UpdateNumber, DeleteCity
-  repeated int32 RelojVector = 2; // ['x', 'y', 'z']
+  string comand = 1; // 1: AddCity , 2: UpdateName, 3: UpdateNumber, 4: DeleteCity
+  repeated int32 reloj_vector = 2; // ['x', 'y', 'z']
 }
 
 message ComandIBReply {
-  string IP = 1; // Dirección IP de server Fulcrum Aleatoria
+  string ip = 1; // Dirección IP de server Fulcrum Aleatoria
 }
 
 message ComandLBRequest {
-  string Comand = 1; // GetNumberRebelds
+  string comand = 1; // GetNumberRebelds
 }
 
 message ComandLBReply {
-  string Cant_Rebelds = 1;
-  repeated int32 RelojVector = 2; // ['x', 'y', 'z']
+  string cant_rebelds = 1; 
+  repeated int32 reloj_vector = 2; // ['x', 'y', 'z']
 }
 
 message ComandBFRequest {
-  string Comand = 1; // GetNumberRebelds
+  string comand = 1; // GetNumberRebelds
 }
 
 message ComandBFReply {
-  string Cant_Rebelds = 1; 
-  repeated int32 RelojVector = 2; // ['x', 'y', 'z']
+  string cant_rebelds = 1; 
+  repeated int32 reloj_vector = 2; // ['x', 'y', 'z']
 }
 
 message ComandIFRequest {
-  string Comand = 1; // AddCity, UpdateName, UpdateNumber, DeleteCity
+  string comand = 1; // 1: AddCity , 2: UpdateName, 3: UpdateNumber, 4: DeleteCity
 }
 
 message ComandIFReply {
-  repeated int32 RelojVector = 1; // ['x', 'y', 'z']
+  repeated int32 reloj_vector = 1; // ['x', 'y', 'z']
 }

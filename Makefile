@@ -4,8 +4,8 @@ gen:
 clean:
 	rm helloworld/*.go
 
-player:
-	go run jugadores/jugador.go 
+broker:
+	go run Broker/broker.go 
 	
 server:
 	go run lider/lider.go
