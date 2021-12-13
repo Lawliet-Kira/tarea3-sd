@@ -81,7 +81,11 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 		/*CODE*/
 	}
 
-	// REALIZAR CONEXION
+	// REALIZAR CONEXION CON SERVIDORES
+
+	//DEBUG
+
+	ip = "10.6.43.114:50052"
 
 	return &pb.ComandIBReply{Ip: ip}, nil
 }
