@@ -47,7 +47,7 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIB
 
 	}
 
-	return &pb.ComandIBReply{IP: ip}, nil
+	return &pb.ComandIBReply{Ip: ip}, nil
 }
 
 const (
