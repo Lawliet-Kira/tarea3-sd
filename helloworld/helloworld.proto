@@ -41,6 +41,7 @@ service Comunication {
 
 message ComandIBRequest {
   string Comand = 1; // AddCity, UpdateName, UpdateNumber, DeleteCity
+  repeated int32 RelojVector = 2; // ['x', 'y', 'z']
 }
 
 message ComandIBReply {
@@ -53,7 +54,7 @@ message ComandLBRequest {
 
 message ComandLBReply {
   string Cant_Rebelds = 1;
-  repeated int32 reloj_vector = 2; // ['x', 'y', 'z']
+  repeated int32 RelojVector = 2; // ['x', 'y', 'z']
 }
 
 message ComandBFRequest {
@@ -62,7 +63,7 @@ message ComandBFRequest {
 
 message ComandBFReply {
   string Cant_Rebelds = 1; 
-  repeated int32 reloj_vector = 2; // ['x', 'y', 'z']
+  repeated int32 RelojVector = 2; // ['x', 'y', 'z']
 }
 
 message ComandIFRequest {
@@ -70,5 +71,5 @@ message ComandIFRequest {
 }
 
 message ComandIFReply {
-  repeated int32 reloj_vector = 1; // ['x', 'y', 'z']
+  repeated int32 RelojVector = 1; // ['x', 'y', 'z']
 }
