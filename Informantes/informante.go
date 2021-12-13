@@ -3,9 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
-
 	pb "lab3/game/helloworld"
+	"log"
+	"os"
+	"os/exec"
+	"runtime"
+	"strings"
 
 	"google.golang.org/grpc"
 )
@@ -14,6 +17,31 @@ const (
 	BrokerAddress = "10.6.43.116:50051"
 	defaultName   = "world"
 )
+
+var clear map[string]func() //create a map for storing clear funcs
+
+func init() {
+	clear = make(map[string]func()) //Initialize it
+	clear["linux"] = func() {
+		cmd := exec.Command("clear") //Linux example, its tested
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}
+	clear["windows"] = func() {
+		cmd := exec.Command("cmd", "/c", "cls") //Windows example, its tested
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}
+}
+
+func CallClear() {
+	value, ok := clear[runtime.GOOS] //runtime.GOOS -> linux, windows, darwin etc.
+	if ok {                          //if we defined a clear func for that platform:
+		value() //we execute it
+	} else { //unsupported platform
+		panic("Your platform is unsupported! I can't clear terminal screen :(")
+	}
+}
 
 var opcion = ""
 var reloj_vector_Informante []int32
@@ -38,18 +66,37 @@ func main() {
 
 	for opcion != "exit" {
 
-		var opcion string
+		var operacion string
+		var valor string
+		var comand string
 
 		// MENÚ
-		fmt.Println("Escoge la opcion:")
-		fmt.Println("	1. AddCity")
-		fmt.Println("	2. UpdateName")
-		fmt.Println("	3. UpdateNumbre")
-		fmt.Println("	4. DeleteCity")
+		fmt.Println("Ingrese Operación: ")
+		fmt.Println("	1. Añadir Ciudad")
+		fmt.Println("	2. Actualizar Nombre")
+		fmt.Println("	3. Actualiar Numero")
+		fmt.Println("	4. Eliminar Ciudad")
 
-		fmt.Scanf("%s\n", &opcion)
+		fmt.Scanf("%s\n", operacion)
 
-		r, _ := client.Comands_Informantes_Broker(ctx, &pb.ComandIBRequest{Comand: opcion, RelojVector: reloj_vector_Informante})
+		// clean the prompt
+		CallClear()
+
+		fmt.Println("\nIngresar comando: ")
+
+		fmt.Scanf("%s\n", &comand)
+		splited := strings.Split(comand, " ")
+
+		nombre_planeta := splited[0]
+		nombre_ciudad := splited[1]
+
+		if len(splited) == 3 {
+			valor = splited[2]
+		} else {
+			valor = ""
+		}
+
+		r, _ := client.Comands_Informantes_Broker(ctx, &pb.ComandIBRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, Valor: valor, RelojVector: reloj_vector_Informante})
 
 		fmt.Println("Direccion IP seleccionada: ", r)
 
@@ -65,9 +112,14 @@ func main() {
 
 		client2 := pb.NewComunicationClient(conn2)
 
-		r2, _ := client2.Comands_Informantes_Fulcrum(ctx, &pb.ComandIFRequest{Comand: opcion})
+		fmt.Println("Escribe el comando: ")
+
+		r2, _ := client2.Comands_Informantes_Fulcrum(ctx, &pb.ComandIFRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, Valor: valor})
 
 		fmt.Println("Reply: ", r2)
+
+		// Close connection with Fulcrum
+		conn2.Close()
 
 	}
 

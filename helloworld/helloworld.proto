@@ -40,8 +40,11 @@ service Comunication {
 }
 
 message ComandIBRequest {
-  string comand = 1; // 1: AddCity , 2: UpdateName, 3: UpdateNumber, 4: DeleteCity
-  repeated int32 reloj_vector = 2; // ['x', 'y', 'z']
+  string operacion = 1; // 1: AddCity , 2: UpdateName, 3: UpdateNumber, 4: DeleteCity
+  string nombre_planeta = 2;
+  string nombre_ciudad = 3;
+  string valor = 4;
+  repeated int32 reloj_vector = 5; // ['x', 'y', 'z']
 }
 
 message ComandIBReply {
@@ -67,7 +70,10 @@ message ComandBFReply {
 }
 
 message ComandIFRequest {
-  string comand = 1; // 1: AddCity , 2: UpdateName, 3: UpdateNumber, 4: DeleteCity
+  string operacion = 1; // 1: AddCity , 2: UpdateName, 3: UpdateNumber, 4: DeleteCity
+  string nombre_planeta = 2;
+  string nombre_ciudad = 3;
+  string valor = 4;
 }
 
 message ComandIFReply {
