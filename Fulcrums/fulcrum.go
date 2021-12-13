@@ -306,7 +306,7 @@ func EscribirLog(operacion string, planeta string, ciudad string, valor string) 
 		op = "DeleteCity"
 	}
 
-	if operacion == 1 && valor == "" {
+	if operacion == "1" && valor == "" {
 		valor = "0"
 	}
 
