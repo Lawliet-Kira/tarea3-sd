@@ -64,10 +64,13 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 	reloj_vector_Leia := in.GetRelojVector()
 	var ip = ""
 	var cant_soldados = "0"
+	operacion := in.GetOperacion()
+	planeta := in.GetNombrePlaneta()
+	ciudad := in.GetNombreCiudad()
 
 	// ESCOGER IP QUE CUMPLA CON MONOTONIC READS
 
-	if len(reloj_vector_Informante) == 0 {
+	if len(reloj_vector_Leia) == 0 {
 
 		Rand_num := rand.Intn(3)
 
@@ -86,23 +89,22 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 	}
 
 	// REALIZAR CONEXION CON SERVIDORES
-
 	ip = Server2Address
 
-	conn, err := grpc.Dial(Server2Address, grpc.WithInsecure(), grpc.WithBlock())
+	conn2, err2 := grpc.Dial(Server2Address, grpc.WithInsecure(), grpc.WithBlock())
 
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+	if err2 != nil {
+		log.Fatalf("did not connect: %v", err2)
 	}
 
-	defer conn.Close()
+	defer conn2.Close()
 
 	// Client Stub to perform RPCs
-	client := pb.NewComunicationClient(conn)
+	client2 := pb.NewComunicationClient(conn2)
 	// Contact the server and psirint out its response.
-	ctx := context.Background()
+	ctx2 := context.Background()
 
-	r, _ := client.Comands_Broker_Fulcrum(ctx, &pb.ComandBFRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, Ip: ip})
+	r, _ := client2.Comands_Broker_Fulcrum(ctx2, &pb.ComandBFRequest{Operacion: operacion, NombrePlaneta: planeta, NombreCiudad: ciudad, Ip: ip})
 
 	cant_soldados = r.GetCantRebelds()
 	reloj_vector_Leia = r.GetRelojVector()
