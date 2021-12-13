@@ -10,6 +10,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	"time"
 
 	"google.golang.org/grpc"
 )
@@ -385,6 +386,13 @@ func (s *server) Comands_Broker_Fulcrum(ctx context.Context, in *pb.ComandBFRequ
 	return &pb.ComandBFReply{CantRebelds: cant_rebeldes, RelojVector: reloj_vector_s}, nil
 }
 
+func listenFunction() {
+	for true {
+		fmt.Println("10 segundos")
+		time.Sleep(10 * time.Second)
+	}
+}
+
 const (
 	port = ":50052"
 )
@@ -410,6 +418,9 @@ func main() {
 	pb.RegisterComunicationServer(s, &server{})
 
 	log.Printf("Server Fulcrum escuchando en %v", lis.Addr())
+
+	// Function each seconds
+	go listenFunction()
 
 	// Llamar Server() con los detalles de puerto para realizar un bloquero
 	// de espera hasta que el proceso sea killed o Stop() es llamado
