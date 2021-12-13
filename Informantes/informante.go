@@ -35,6 +35,7 @@ func main() {
 	ctx := context.Background()
 	//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	fmt.Println("Escoge a:")
+
 	for opcion != "exit" {
 
 		var opcion string
@@ -51,6 +52,21 @@ func main() {
 		r, _ := client.Comands_Informantes_Broker(ctx, &pb.ComandIBRequest{Comand: opcion, RelojVector: reloj_vector_Informante})
 
 		fmt.Println("Direccion IP seleccionada: ", r)
+
+		// Connection with IP Fulcrum
+
+		conn2, err2 := grpc.Dial(r, grpc.WithInsecure(), grpc.WithBlock())
+
+		if err2 != nil {
+			log.Fatalf("did not connect: %v", err2)
+		}
+
+		client2 := pb.NewComunicationClient(conn2)
+
+		r2, _ := client.Comands_Informantes_Fulcrum(ctx, &pb.ComandIFRequest{Comand: opcion})
+
+		fmt.Println("Reply: ", r2)
+
 	}
 
 }

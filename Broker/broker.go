@@ -22,7 +22,9 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIB
 	var ip = ""
 
 	if len(reloj_vector_Informante) == 0 {
+
 		Rand_num := rand.Intn(3)
+
 		if Rand_num == 0 {
 			ip = Server1Address
 		}
@@ -32,6 +34,7 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIB
 		if Rand_num == 2 {
 			ip = Server3Address
 		}
+
 	} else {
 		//AQUÍ HAY QUE ENVIAR MENSAJE A FULCRUMS TAL QUE ME RETORNE SUS RELOJES DE VECTORES
 
@@ -53,9 +56,9 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIB
 const (
 	port           = ":50051"
 	BrokenAddress  = "10.6.43.116:50052"
-	Server1Address = "10.6.43.113"
-	Server2Address = "10.6.43.114"
-	Server3Address = "10.6.43.115"
+	Server1Address = "10.6.43.113:50051"
+	Server2Address = "10.6.43.114:50051"
+	Server3Address = "10.6.43.115:50051"
 )
 
 func main() {
@@ -75,7 +78,7 @@ func main() {
 	// Registrar nuestra implementación de server con gRPC server
 	pb.RegisterComunicationServer(s, &server{})
 
-	log.Printf("Server escuchando en %v", lis.Addr())
+	log.Printf("Server Broker escuchando en %v", lis.Addr())
 
 	// Llamar Server() con los detalles de puerto para realizar un bloquero
 	// de espera hasta que el proceso sea killed o Stop() es llamado
