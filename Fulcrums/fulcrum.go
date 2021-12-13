@@ -148,6 +148,8 @@ func UpdateName(planeta string, ciudad string, valor string) string {
 	// Matrix con las lineas del archivo
 	lines := strings.Split(string(input), "\n")
 
+	fmt.Println("Nueva_ciudad: ", valor, "-----")
+
 	// Leer linea x linea
 	for i, line := range lines {
 		if strings.Contains(line, ciudad) {
