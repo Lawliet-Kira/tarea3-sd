@@ -17,7 +17,7 @@ type server struct {
 
 func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIBRequest) (*pb.ComandIBReply, error) {
 	rand.Seed(time.Now().UnixNano())
-	log.Printf("Comand Received: %v", in.GetComand())
+	log.Printf("Operacion Received: %v", in.GetOperacion())
 	reloj_vector_Informante := in.GetRelojVector()
 	var ip = ""
 

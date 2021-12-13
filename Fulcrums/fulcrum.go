@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	pb "lab3/game/helloworld"
 	"log"
 	"net"
@@ -67,25 +68,30 @@ func (s *server) Comands_Informantes_Fulcrum(ctx context.Context, in *pb.ComandI
 	nombre_ciudad := in.GetNombreCiudad()
 	valor := in.GetValor()
 
-	switch operacion {
+	fmt.Println("operacion: ", operacion)
+	fmt.Println("nameplanet: ", nombre_planeta)
+	fmt.Println("namecity: ", nombre_ciudad)
+	fmt.Println("value: ", valor)
 
-	// LOGICA DE ADDCITY
-	case "1":
-		AddCity(nombre_planeta, nombre_ciudad, valor)
+	// switch operacion {
 
-	// LOGICA DE UPDATE NAME
-	case "2":
-		UpdateName(nombre_planeta, nombre_ciudad, valor)
+	// // LOGICA DE ADDCITY
+	// case "1":
+	// 	AddCity(nombre_planeta, nombre_ciudad, valor)
 
-	// LOGICA UPDATE NUMBER
-	case "3":
-		UpdateNumber(nombre_planeta, nombre_ciudad, valor)
+	// // LOGICA DE UPDATE NAME
+	// case "2":
+	// 	UpdateName(nombre_planeta, nombre_ciudad, valor)
 
-	// LOGICA DELETE CITY
-	case "4":
-		DeleteCity(nombre_planeta, nombre_ciudad)
+	// // LOGICA UPDATE NUMBER
+	// case "3":
+	// 	UpdateNumber(nombre_planeta, nombre_ciudad, valor)
 
-	}
+	// // LOGICA DELETE CITY
+	// case "4":
+	// 	DeleteCity(nombre_planeta, nombre_ciudad)
+
+	// }
 
 	// VERIFICAR SI EXISTE EL ARCHIVO LOGS DE REGISTROS
 
