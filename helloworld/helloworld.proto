@@ -94,7 +94,7 @@ message ComandIFReply {
 }
 
 message PingMsg {
-  string señal = 1;
+  string signal = 1;
 }
 
 message HashRepply {

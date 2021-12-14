@@ -506,9 +506,9 @@ func ConsistenciaEventual() {
 		// Contact the server and psirint out its response.
 		ctx := context.Background()
 
-		señal := "Pingeao"
+		signal := "Pingeao"
 
-		r, _ := client.Comands_Request_Hashing(ctx, &pb.PingMsg{Señal: señal})
+		r, _ := client.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
 
 		fmt.Println("R: ", r)
 
