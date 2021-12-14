@@ -459,7 +459,54 @@ func (s *server) Comands_Request_Hashing(ctx context.Context, in *pb.PingMsg) (*
 	return &pb.HashRepply{Hashing: pbHashing}, nil
 }
 
+func (s *server) Comands_Request_Files(ctx context.Context, in *pb.PingMsg) (*pb.ComandFFFiles, error) {
+
+	path, err := os.Getwd()
+
+	var reloj_vector []int32
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	logpath := path + "/logs/" + in.GetSignal() + ".txt"
+
+	filepath := path + "/planetas/" + in.GetSignal() + ".txt"
+
+	index := findHashing(Hashing, in.GetSignal())
+
+	if index == -1 {
+
+		// Agregar registro planeta y crear log vacio
+		// Reloj [0,0,0]
+		Hashing = append(Hashing, *newKeyvalue(in.GetSignal()))
+		createFile(filepath)
+		createFile(logpath)
+		reloj_vector = []int32{0, 0, 0}
+
+	} else {
+		reloj_vector = Hashing[index].vector
+	}
+
+	//Enviar logs y reloj del planeta
+
+	//Abrir archivo
+	input, err := ioutil.ReadFile(path)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// Matrix con las lineas del archivo
+	lines := strings.Split(string(input), "\n")
+
+	return &pb.ComandFFFiles{Text: lines, RelojVector: reloj_vector}, nil
+
+}
+
 func ConsistenciaEventual() {
+
+	path, _ := os.Getwd()
 
 	for true {
 
@@ -474,8 +521,17 @@ func ConsistenciaEventual() {
 
 		defer conn.Close()
 
+		/*conn2, err2 := grpc.Dial(Server1Address, grpc.WithInsecure(), grpc.WithBlock())
+
+		if err2 != nil {
+			log.Fatalf("did not connect: %v", err)
+		}
+
+		defer conn2.Close()*/
 		// Client Stub to perform RPCs
 		client := pb.NewComunicationClient(conn)
+
+		//client2 := pb.NewComunicationClient(conn2)
 		// Contact the server and psirint out its response.
 		ctx := context.Background()
 
@@ -483,7 +539,26 @@ func ConsistenciaEventual() {
 		fmt.Println("Pingeao")
 		r, _ := client.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
 		newHash := MergeHashing(Hashing, r.GetHashing())
+
+		//r, _ = client2.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
+		//newHash = MergeHashing(newHash, r.GetHashing())
+
+		for _, keyvalue := range newHash {
+			if findHashing(Hashing, keyvalue.planeta) == -1 {
+				logpath := path + "/logs/" + keyvalue.planeta + ".txt"
+
+				filepath := path + "/planetas/" + keyvalue.planeta + ".txt"
+				createFile(logpath)
+				createFile(filepath)
+				Hashing = append(Hashing, *newKeyvalue(keyvalue.planeta))
+			}
+			r1, _ := client.Comands_Request_Files(ctx, &pb.PingMsg{Signal: keyvalue.planeta})
+			fmt.Println("Logs: ", r1.GetText())
+			fmt.Println("Reloj: ", r1.GetRelojVector)
+			//r2, _ := client2.Comands_Request_Files(ctx, &pb.PingMsg{Signal: keyvalue.planeta})
+		}
 		fmt.Println(newHash)
+
 		fmt.Println("R: ", r)
 
 	}
@@ -496,6 +571,10 @@ const (
 	Server2Address = "10.6.43.114:50052"
 	Server3Address = "10.6.43.115:50052"
 )
+
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////// 	UTILIDADES 	//////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
 // GetLocalIP returns the non loopback local IP of the host
 func GetLocalIP() string {
@@ -514,10 +593,11 @@ func GetLocalIP() string {
 	return ""
 }
 
+//Fusiona la tabla de hashing de
 func MergeHashing(Hash1 []Keyvalue, Hash2 []*pb.HashRepply_KeyValue) []Keyvalue {
 
 	for _, keyvalue := range Hash2 {
-		temp := Keyvalue{planeta: keyvalue.GetPlaneta(), vector: keyvalue.GetRelojVector()}
+		temp := Keyvalue{planeta: keyvalue.GetPlaneta(), vector: []int32{0, 0, 0}}
 		Hash1 = append(Hash1, temp)
 	}
 	check := make(map[string]int)
