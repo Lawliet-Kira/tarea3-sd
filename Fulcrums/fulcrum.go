@@ -577,8 +577,8 @@ func ConsistenciaEventual() {
 			reloj2 := r2.GetRelojVector() // Reloj del Esclavo S1
 
 			// Aplicar cambios del Log al registro planetario
-			ApplyChanges(0, reloj1[0], relojDom[0], logs1, target) // sd: [0,0,3] se: [0,0,0]
-			ApplyChanges(2, reloj2[2], relojDom[2], logs2, target) // sd: [0,0,0] se: [0,0,2]
+			ApplyChanges(2, reloj1[2], relojDom[2], logs1, target) // sd: [0,3,0] se: [0,0,4]
+			ApplyChanges(0, reloj2[0], relojDom[0], logs2, target) // sd: [0,0,0] se: [0,0,2]
 
 			// Lectura del archivo de planeta
 			//Abrir archivo
