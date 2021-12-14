@@ -493,7 +493,7 @@ func ApplyChanges(pos int32, val int32, valDom int32, logs []string, target stri
 				fmt.Println(DeleteCity(planeta, ciudad))
 			}
 
-			Hashing[findHashing(Hashing, target)].vector[pos]++
+			//Hashing[findHashing(Hashing, target)].vector[pos]++
 
 		}
 
