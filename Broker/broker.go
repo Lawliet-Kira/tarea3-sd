@@ -94,7 +94,19 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 		}
 
 	} else {
-		/*CODE*/
+		ip = Server2Address
+		conn2, err2 := grpc.Dial(Server2Address, grpc.WithInsecure(), grpc.WithBlock())
+
+		if err2 != nil {
+			log.Fatalf("did not connect: %v", err2)
+		}
+
+		// Client Stub to perform RPCs
+		client2 := pb.NewComunicationClient(conn2)
+		// Contact the server and psirint out its response.
+		ctx2 := context.Background()
+
+		conn2.Close()
 	}
 
 	// REALIZAR CONEXION CON SERVIDORES
@@ -106,8 +118,6 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 		log.Fatalf("did not connect: %v", err2)
 	}
 
-	defer conn2.Close()
-
 	// Client Stub to perform RPCs
 	client2 := pb.NewComunicationClient(conn2)
 	// Contact the server and psirint out its response.
@@ -117,6 +127,8 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 
 	cant_soldados = r.GetCantRebelds()
 	reloj_vector_Leia = r.GetRelojVector()
+
+	conn2.Close()
 
 	return &pb.ComandLBReply{CantRebelds: cant_soldados, RelojVector: reloj_vector_Leia}, nil
 }

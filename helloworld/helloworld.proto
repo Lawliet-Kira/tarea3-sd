@@ -41,7 +41,8 @@ service Comunication {
     rpc Comands_Request_Hashing (PingMsg) returns (HashRepply) { }
     // Sends Comands_Fulcrum_Fulcrum
     rpc Comands_Request_Files (PingMsg) returns (ComandFFFiles) { }
-    rpc Comands_Fulcrum_Fulcrum (ComandFFFiles) returns (PingMsg) { }
+
+    rpc Comands_Retrieve_Files (ComandFFFiles) returns (PingMsg) { }
 
 }
 
@@ -110,4 +111,5 @@ message HashRepply {
 message ComandFFFiles {
   repeated string text = 1;
   repeated int32 reloj_vector = 2; // ['x', 'y', 'z']
+  string planeta = 3;
 }

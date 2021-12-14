@@ -53,26 +53,6 @@ func findHashing(Hashing []Keyvalue, planeta string) int {
 
 }
 
-// Verifica si existe un archivo, en caso contrario lo crea
-func createFile(path string) {
-
-	var _, err = os.Stat(path)
-
-	if os.IsNotExist(err) {
-
-		var file, err = os.Create(path)
-
-		if err != nil {
-			log.Fatalf("Error al crear archivo: %v", err)
-			return
-		}
-
-		defer file.Close()
-
-	}
-
-}
-
 func AddCity(planeta string, ciudad string, valor string) string {
 
 	// "nombre_planeta nombre_ciudad [nuevo_valor]"
@@ -92,7 +72,7 @@ func AddCity(planeta string, ciudad string, valor string) string {
 		// path/to/whatever exists
 		fmt.Println("El archivo existe")
 		index := findHashing(Hashing, planeta)
-		Hashing[index].vector[idFulcrum]++
+
 		log.Println(Hashing[index].vector)
 
 	} else if errors.Is(err, os.ErrNotExist) {
@@ -179,8 +159,6 @@ func UpdateName(planeta string, ciudad string, valor string) string {
 	index := findHashing(Hashing, planeta)
 
 	if index != -1 {
-		Hashing[index].vector[idFulcrum]++
-		log.Println(Hashing[index].vector)
 		return "success"
 	}
 
@@ -232,8 +210,7 @@ func UpdateNumber(planeta string, ciudad string, valor string) string {
 	index := findHashing(Hashing, planeta)
 
 	if index != -1 {
-		Hashing[index].vector[idFulcrum]++
-		log.Println(Hashing[index].vector)
+
 		return "success"
 	}
 
@@ -284,68 +261,10 @@ func DeleteCity(planeta string, ciudad string) string {
 	index := findHashing(Hashing, planeta)
 
 	if index != -1 {
-		Hashing[index].vector[idFulcrum]++
-		log.Println(Hashing[index].vector)
 		return "success"
 	}
 
 	return "error"
-
-}
-
-func EscribirLog(operacion string, planeta string, ciudad string, valor string) string {
-
-	path, err := os.Getwd()
-
-	if err != nil {
-		log.Println(err)
-		return "error"
-	}
-
-	path = path + "/logs/" + planeta + ".txt"
-
-	// VERIFICAR SI EXISTE EL ARCHIVO, SINO CREARLO
-	createFile(path)
-
-	//ESCRIBIR EL LOG AL FINAL DEL ARCHIVO
-	op := ""
-
-	switch operacion {
-
-	case "1":
-		op = "AddCity"
-	case "2":
-		op = "UpdateName"
-	case "3":
-		op = "UpdateNumber"
-	case "4":
-		op = "DeleteCity"
-	}
-
-	if operacion == "1" && valor == "" {
-		valor = "0"
-	}
-
-	ciudad = strings.TrimSuffix(ciudad, "\n")
-	valor = strings.TrimSuffix(valor, "\n")
-
-	text := op + " " + planeta + " " + ciudad + " " + valor + "\n"
-
-	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
-
-	if err != nil {
-		log.Fatalln(err)
-		return "error"
-	}
-
-	defer f.Close()
-
-	if _, err = f.WriteString(text); err != nil {
-		log.Fatalln(err)
-		return "error"
-	}
-
-	return "success"
 
 }
 
@@ -369,18 +288,23 @@ func (s *server) Comands_Informantes_Fulcrum(ctx context.Context, in *pb.ComandI
 	// LOGICA DE ADDCITY
 	case "1":
 		fmt.Println(AddCity(planeta, ciudad, valor))
-
+		index := findHashing(Hashing, planeta)
+		Hashing[index].vector[idFulcrum]++
 	// LOGICA DE UPDATE NAME
 	case "2":
 		fmt.Println(UpdateName(planeta, ciudad, valor))
-
+		index := findHashing(Hashing, planeta)
+		Hashing[index].vector[idFulcrum]++
 	// LOGICA UPDATE NUMBER
 	case "3":
 		fmt.Println(UpdateNumber(planeta, ciudad, valor))
-
+		index := findHashing(Hashing, planeta)
+		Hashing[index].vector[idFulcrum]++
 	// LOGICA DELETE CITY
 	case "4":
 		fmt.Println(DeleteCity(planeta, ciudad))
+		index := findHashing(Hashing, planeta)
+		Hashing[index].vector[idFulcrum]++
 	}
 
 	EscribirLog(operacion, planeta, ciudad, valor)
@@ -503,63 +427,174 @@ func (s *server) Comands_Request_Files(ctx context.Context, in *pb.PingMsg) (*pb
 	return &pb.ComandFFFiles{Text: lines, RelojVector: reloj_vector}, nil
 
 }
+func (s *server) Comands_Retrieve_Files(ctx context.Context, in *pb.ComandFFFiles) (*pb.PingMsg, error) {
+
+	//Replicar cambios recibidos del nodo dominante en el registro planetario borrar logs y guardar reloj
+	//Leer texto recibido, sobreescribir registro y borrar log
+	// Planeta
+	target := in.GetPlaneta()
+	text := in.GetText()
+	path, _ := os.Getwd()
+	filepath := path + "/planetas/" + target + ".txt"
+
+	// Replace Vector Dominante
+	Hashing[findHashing(Hashing, target)].vector = in.GetRelojVector()
+
+	// Replace Planet Register
+	text_replace := strings.Join(text, "\n")
+
+	err := ioutil.WriteFile(filepath, []byte(text_replace), 0644)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Delete Logs
+
+	path_logs := path + "/logs/" + target
+
+	e := os.Remove(path_logs + ".txt")
+
+	if e != nil {
+		log.Fatal(e)
+	}
+
+	return &pb.PingMsg{Signal: ""}, nil
+
+}
+
+func ApplyChanges(pos int32, val int32, valDom int32, logs []string, target string) {
+
+	if val > valDom {
+
+		for _, accion := range logs {
+
+			accion = strings.TrimSuffix(accion, "\n")
+			split_line := strings.Split(accion, " ")
+			operacion := split_line[0]
+			planeta := split_line[1]
+			ciudad := split_line[2]
+			valor := ""
+
+			if len(split_line) > 3 {
+				valor = split_line[3]
+			}
+
+			switch operacion {
+			case "AddCity":
+				fmt.Println(AddCity(planeta, ciudad, valor))
+			// LOGICA DE UPDATE NAME
+			case "UpdateName":
+				fmt.Println(UpdateName(planeta, ciudad, valor))
+			// LOGICA UPDATE NUMBER
+			case "UpdateNumber":
+				fmt.Println(UpdateNumber(planeta, ciudad, valor))
+			// LOGICA DELETE CITY
+			case "DeleteCity":
+				fmt.Println(DeleteCity(planeta, ciudad))
+			}
+
+			Hashing[findHashing(Hashing, target)].vector[pos]++
+
+		}
+
+	}
+
+}
 
 func ConsistenciaEventual() {
 
+	// Establecer conexión con servidor 3
 	path, _ := os.Getwd()
+
+	conn, err := grpc.Dial(Server3Address, grpc.WithInsecure(), grpc.WithBlock())
+
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+
+	client := pb.NewComunicationClient(conn)
+	ctx := context.Background()
+
+	defer conn.Close()
+
+	// Establecer conexión con servidor 1
+	conn2, err2 := grpc.Dial(Server1Address, grpc.WithInsecure(), grpc.WithBlock())
+
+	if err2 != nil {
+		log.Fatalf("did not connect: %v", err2)
+	}
+
+	client2 := pb.NewComunicationClient(conn2)
+	ctx2 := context.Background()
+
+	defer conn2.Close()
 
 	for true {
 
 		time.Sleep(60 * time.Second)
 		fmt.Println("Consistencia Eventual...")
+
 		//HACER PING
-		conn, err := grpc.Dial(Server3Address, grpc.WithInsecure(), grpc.WithBlock())
-
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-
-		defer conn.Close()
-
-		/*conn2, err2 := grpc.Dial(Server1Address, grpc.WithInsecure(), grpc.WithBlock())
-
-		if err2 != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-
-		defer conn2.Close()*/
-		// Client Stub to perform RPCs
-		client := pb.NewComunicationClient(conn)
-
-		//client2 := pb.NewComunicationClient(conn2)
-		// Contact the server and psirint out its response.
-		ctx := context.Background()
-
 		signal := "Pingeao"
 		fmt.Println("Pingeao")
-		r, _ := client.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
-		newHash := MergeHashing(Hashing, r.GetHashing())
 
-		//r, _ = client2.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
-		//newHash = MergeHashing(newHash, r.GetHashing())
+		// Avisar a los servidores que envien sus Hashing
+		r1, _ := client.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
+		newHash := MergeHashing(Hashing, r1.GetHashing())
+
+		r2, _ := client2.Comands_Request_Hashing(ctx2, &pb.PingMsg{Signal: signal})
+		newHash = MergeHashing(newHash, r2.GetHashing())
 
 		for _, keyvalue := range newHash {
-			if findHashing(Hashing, keyvalue.planeta) == -1 {
-				logpath := path + "/logs/" + keyvalue.planeta + ".txt"
 
-				filepath := path + "/planetas/" + keyvalue.planeta + ".txt"
+			target := keyvalue.planeta
+			filepath := path + "/planetas/" + target + ".txt"
+
+			if findHashing(Hashing, target) == -1 {
+				logpath := path + "/logs/" + target + ".txt"
 				createFile(logpath)
 				createFile(filepath)
-				Hashing = append(Hashing, *newKeyvalue(keyvalue.planeta))
+				Hashing = append(Hashing, *newKeyvalue(target))
 			}
-			r1, _ := client.Comands_Request_Files(ctx, &pb.PingMsg{Signal: keyvalue.planeta})
-			fmt.Println("Logs: ", r1.GetText())
-			fmt.Println("Reloj: ", r1.GetRelojVector)
-			//r2, _ := client2.Comands_Request_Files(ctx, &pb.PingMsg{Signal: keyvalue.planeta})
-		}
-		fmt.Println(newHash)
 
-		fmt.Println("R: ", r)
+			// Recuperación de Logs y Reloj para un Planeta Particular del SV esclavo S3
+			r1, _ := client.Comands_Request_Files(ctx, &pb.PingMsg{Signal: target})
+			fmt.Println("Logs S3: ", r1.GetText())
+			fmt.Println("Reloj S3: ", r1.GetRelojVector())
+			relojDom := Hashing[findHashing(Hashing, target)].vector // Reloj Dominante S2
+			logs1 := r1.GetText()                                    // Logs del Esclavo S3
+			reloj1 := r1.GetRelojVector()                            // Reloj del Esclavo S3
+
+			// Recuperación de Logs y Reloj para un Planeta Particular del SV esclavo S1
+			r2, _ := client2.Comands_Request_Files(ctx2, &pb.PingMsg{Signal: target})
+			fmt.Println("Logs S1: ", r2.GetText())
+			fmt.Println("Reloj S1: ", r2.GetRelojVector())
+			logs2 := r2.GetText()         // Logs del Esclavo S1
+			reloj2 := r2.GetRelojVector() // Reloj del Esclavo S1
+
+			// Aplicar cambios del Log al registro planetario
+			ApplyChanges(0, reloj1[0], relojDom[0], logs1, target) // sd: [0,0,0] se: [2,0,0]
+			ApplyChanges(2, reloj2[2], relojDom[2], logs2, target) // sd: [0,0,0] se: [0,0,2]
+
+			// Lectura del archivo de planeta
+			//Abrir archivo
+			input, err := ioutil.ReadFile(filepath)
+
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			// Matrix con las lineas del archivo
+			linesReg := strings.Split(string(input), "\n")
+			relojDom = Hashing[findHashing(Hashing, target)].vector
+
+			// Replicación de registro de planeta y reloj sobre Servidores Esclavos
+			r1, _ = client.Comands_Retrieve_Files(ctx, &pb.ComandFFFiles{Text: linesReg, RelojVector: relojDom, Planeta: target})
+
+			r2, _ = client2.Comands_Retrieve_Files(ctx2, &pb.ComandFFFiles{Text: linesReg, RelojVector: relojDom, Planeta: target})
+
+		}
 
 	}
 
@@ -573,8 +608,83 @@ const (
 )
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-///////////////////// 	UTILIDADES 	//////////////////////////////////////////////////////
+//////////////////////// 	UTILIDADES 	 //////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
+
+// Verifica si existe un archivo, en caso contrario lo crea
+func createFile(path string) {
+
+	var _, err = os.Stat(path)
+
+	if os.IsNotExist(err) {
+
+		var file, err = os.Create(path)
+
+		if err != nil {
+			log.Fatalf("Error al crear archivo: %v", err)
+			return
+		}
+
+		defer file.Close()
+
+	}
+
+}
+func EscribirLog(operacion string, planeta string, ciudad string, valor string) string {
+
+	path, err := os.Getwd()
+
+	if err != nil {
+		log.Println(err)
+		return "error"
+	}
+
+	path = path + "/logs/" + planeta + ".txt"
+
+	// VERIFICAR SI EXISTE EL ARCHIVO, SINO CREARLO
+	createFile(path)
+
+	//ESCRIBIR EL LOG AL FINAL DEL ARCHIVO
+	op := ""
+
+	switch operacion {
+
+	case "1":
+		op = "AddCity"
+	case "2":
+		op = "UpdateName"
+	case "3":
+		op = "UpdateNumber"
+	case "4":
+		op = "DeleteCity"
+	}
+
+	if operacion == "1" && valor == "" {
+		valor = "0"
+	}
+
+	ciudad = strings.TrimSuffix(ciudad, "\n")
+	valor = strings.TrimSuffix(valor, "\n")
+
+	text := op + " " + planeta + " " + ciudad + " " + valor + "\n"
+
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+
+	if err != nil {
+		log.Fatalln(err)
+		return "error"
+	}
+
+	defer f.Close()
+
+	if _, err = f.WriteString(text); err != nil {
+		log.Fatalln(err)
+		return "error"
+	}
+
+	return "success"
+
+}
 
 // GetLocalIP returns the non loopback local IP of the host
 func GetLocalIP() string {
