@@ -547,6 +547,8 @@ func ConsistenciaEventual() {
 		r2, _ := client2.Comands_Request_Hashing(ctx2, &pb.PingMsg{Signal: signal})
 		newHash = MergeHashing(newHash, r2.GetHashing())
 
+		fmt.Println("newHASH: ", newHash)
+
 		for _, keyvalue := range newHash {
 
 			target := keyvalue.planeta
@@ -566,7 +568,7 @@ func ConsistenciaEventual() {
 			relojDom := Hashing[findHashing(Hashing, target)].vector // Reloj Dominante S2
 			logs1 := r1.GetText()                                    // Logs del Esclavo S3
 			reloj1 := r1.GetRelojVector()                            // Reloj del Esclavo S3
-
+			fmt.Println("Reloj Dominante: ", relojDom)
 			// Recuperación de Logs y Reloj para un Planeta Particular del SV esclavo S1
 			r2, _ := client2.Comands_Request_Files(ctx2, &pb.PingMsg{Signal: target})
 			fmt.Println("Logs S1: ", r2.GetText())
@@ -575,7 +577,7 @@ func ConsistenciaEventual() {
 			reloj2 := r2.GetRelojVector() // Reloj del Esclavo S1
 
 			// Aplicar cambios del Log al registro planetario
-			ApplyChanges(0, reloj1[0], relojDom[0], logs1, target) // sd: [0,0,0] se: [2,0,0]
+			ApplyChanges(0, reloj1[0], relojDom[0], logs1, target) // sd: [0,0,3] se: [0,0,0]
 			ApplyChanges(2, reloj2[2], relojDom[2], logs2, target) // sd: [0,0,0] se: [0,0,2]
 
 			// Lectura del archivo de planeta

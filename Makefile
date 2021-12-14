@@ -13,3 +13,8 @@ info:
 
 fulcrum:
 	go run Fulcrums/fulcrum.go
+
+git:
+	git add .
+	git commit -m "a"
+	git push
