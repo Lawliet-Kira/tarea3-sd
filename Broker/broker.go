@@ -52,7 +52,7 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIB
 
 	//DEBUG
 
-	ip = "10.6.43.114:50052"
+	ip = "10.6.43.115:50052"
 
 	return &pb.ComandIBReply{Ip: ip}, nil
 }

@@ -489,7 +489,7 @@ func ConsistenciaEventual() {
 		time.Sleep(20 * time.Second)
 		fmt.Println("Consistencia Eventual...")
 		//HACER PING
-		conn, err := grpc.Dial(Server1Address, grpc.WithInsecure(), grpc.WithBlock())
+		conn, err := grpc.Dial(Server3Address, grpc.WithInsecure(), grpc.WithBlock())
 
 		if err != nil {
 			log.Fatalf("did not connect: %v", err)
@@ -503,7 +503,7 @@ func ConsistenciaEventual() {
 		ctx := context.Background()
 
 		signal := "Pingeao"
-
+		fmt.Println("Pingeao")
 		r, _ := client.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
 
 		fmt.Println("R: ", r)
