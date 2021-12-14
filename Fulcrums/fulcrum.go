@@ -515,10 +515,10 @@ func GetLocalIP() string {
 }
 
 func MergeHashing(Hash1 []Keyvalue, Hash2 []*pb.HashRepply_KeyValue) []Keyvalue {
-	var Hash2k []Keyvalue
+
 	for _, keyvalue := range Hash2 {
 		temp := Keyvalue{planeta: keyvalue.GetPlaneta(), vector: keyvalue.GetRelojVector()}
-		Hash1 = append(Hash2k, temp)
+		Hash1 = append(Hash1, temp)
 	}
 	check := make(map[string]int)
 	res := make([]Keyvalue, 0)
