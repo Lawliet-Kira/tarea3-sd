@@ -474,15 +474,12 @@ func (s *server) Comands_Request_Hashing(ctx context.Context, in *pb.PingMsg) (*
 	
 	pbHashing := []*pb.HashRepply
 	
-	for _, keyvalue range Hashing{
-		temp := pb.KeyValue{
-			Planeta: keyvalue.planeta
-			Reloj_vector: keyvalue.vector
-		}
+	for _, keyvalue :=range Hashing{
+		temp := pb.KeyValue{Planeta: keyvalue.planeta, RelojVector: keyvalue.vector}
 		pbHashing = append(pbHashing, temp)
 	}
 	
-	return &pb.HashReply{Hashing: pbHashing, nil
+	return &pb.HashReply{Hashing: pbHashing}, nil
 }
 
 func ConsistenciaEventual() {
