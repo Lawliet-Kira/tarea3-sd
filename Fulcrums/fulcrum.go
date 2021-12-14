@@ -40,7 +40,7 @@ func newKeyvalue(planeta string) *Keyvalue {
 }
 
 //Encuentra la posicion en la que se encuentra el planeta deseado en la lista de Keyvalues
-func findHashing(planeta string) int {
+func findHashing(Hashing []Keyvalue, planeta string) int {
 
 	for i, keyvalue := range Hashing {
 		if keyvalue.planeta == planeta {
@@ -91,7 +91,7 @@ func AddCity(planeta string, ciudad string, valor string) string {
 
 		// path/to/whatever exists
 		fmt.Println("El archivo existe")
-		index := findHashing(planeta)
+		index := findHashing(Hashing, planeta)
 		Hashing[index].vector[idFulcrum]++
 		log.Println(Hashing[index].vector)
 
@@ -100,7 +100,7 @@ func AddCity(planeta string, ciudad string, valor string) string {
 		// path/to/whatever does *not* exist
 		createFile(path)
 		Hashing = append(Hashing, *newKeyvalue(planeta))
-		index := findHashing(planeta)
+		index := findHashing(Hashing, planeta)
 		Hashing[index].vector[idFulcrum]++
 		log.Println(Hashing[index].vector)
 
@@ -176,7 +176,7 @@ func UpdateName(planeta string, ciudad string, valor string) string {
 		return "error"
 	}
 
-	index := findHashing(planeta)
+	index := findHashing(Hashing, planeta)
 
 	if index != -1 {
 		Hashing[index].vector[idFulcrum]++
@@ -229,7 +229,7 @@ func UpdateNumber(planeta string, ciudad string, valor string) string {
 		return "error"
 	}
 
-	index := findHashing(planeta)
+	index := findHashing(Hashing, planeta)
 
 	if index != -1 {
 		Hashing[index].vector[idFulcrum]++
@@ -281,7 +281,7 @@ func DeleteCity(planeta string, ciudad string) string {
 		return "error"
 	}
 
-	index := findHashing(planeta)
+	index := findHashing(Hashing, planeta)
 
 	if index != -1 {
 		Hashing[index].vector[idFulcrum]++
@@ -527,7 +527,7 @@ func MergeHashing(Hash1 []Keyvalue, Hash2 []*pb.HashRepply_KeyValue) []Keyvalue 
 	}
 
 	for planeta, _ := range check {
-		index := findHashing(planeta)
+		index := findHashing(Hash1, planeta)
 		res = append(res, Hash1[index])
 	}
 	fmt.Println(res)
