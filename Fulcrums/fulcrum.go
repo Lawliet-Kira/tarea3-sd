@@ -467,17 +467,28 @@ func ApplyChanges(pos int32, val int32, valDom int32, logs []string, target stri
 
 	if val > valDom {
 
+		log.Println("DEBUG 0")
+
 		for _, accion := range logs {
 
+			log.Println("accion", accion)
+			log.Println("DEBUG 1")
+
 			split_line := strings.Split(accion, " ")
+			log.Println("DEBUG 2")
 			operacion := strings.TrimSuffix(split_line[0], "\n")
+			log.Println("DEBUG 3")
 			planeta := strings.TrimSuffix(split_line[1], "\n")
 			ciudad := strings.TrimSuffix(split_line[2], "\n")
 			valor := ""
 
+			log.Println("DEBUG 4")
+
 			if len(split_line) > 3 {
 				valor = strings.TrimSuffix(split_line[3], "\n")
 			}
+
+			log.Println("DEBUG 5")
 
 			switch operacion {
 			case "AddCity":
@@ -493,7 +504,11 @@ func ApplyChanges(pos int32, val int32, valDom int32, logs []string, target stri
 				fmt.Println(DeleteCity(planeta, ciudad))
 			}
 
-			//Hashing[findHashing(Hashing, target)].vector[pos]++
+			log.Println("DEBUG 6")
+
+			Hashing[findHashing(Hashing, target)].vector[pos]++
+
+			log.Println("DEBUG 7")
 
 		}
 
