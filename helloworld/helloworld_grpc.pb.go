@@ -24,8 +24,12 @@ type ComunicationClient interface {
 	Comands_Leia_Broker(ctx context.Context, in *ComandLBRequest, opts ...grpc.CallOption) (*ComandLBReply, error)
 	// Sends Comands_Broker_Fulcrum
 	Comands_Broker_Fulcrum(ctx context.Context, in *ComandBFRequest, opts ...grpc.CallOption) (*ComandBFReply, error)
-	// Sends Comandas_Informantes_Fulcrum
+	// Sends Comands_Informantes_Fulcrum
 	Comands_Informantes_Fulcrum(ctx context.Context, in *ComandIFRequest, opts ...grpc.CallOption) (*ComandIFReply, error)
+	// Sends Comands_Request_Hashing
+	Comands_Request_Hashing(ctx context.Context, in *PingMsg, opts ...grpc.CallOption) (*HashRepply, error)
+	// Sends Comands_Fulcrum_Fulcrum
+	Comands_Fulcrum_Fulcrum(ctx context.Context, in *ComandFFDone, opts ...grpc.CallOption) (*PingMsg, error)
 }
 
 type comunicationClient struct {
@@ -72,6 +76,24 @@ func (c *comunicationClient) Comands_Informantes_Fulcrum(ctx context.Context, in
 	return out, nil
 }
 
+func (c *comunicationClient) Comands_Request_Hashing(ctx context.Context, in *PingMsg, opts ...grpc.CallOption) (*HashRepply, error) {
+	out := new(HashRepply)
+	err := c.cc.Invoke(ctx, "/helloworld.Comunication/Comands_Request_Hashing", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *comunicationClient) Comands_Fulcrum_Fulcrum(ctx context.Context, in *ComandFFDone, opts ...grpc.CallOption) (*PingMsg, error) {
+	out := new(PingMsg)
+	err := c.cc.Invoke(ctx, "/helloworld.Comunication/Comands_Fulcrum_Fulcrum", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ComunicationServer is the server API for Comunication service.
 // All implementations must embed UnimplementedComunicationServer
 // for forward compatibility
@@ -82,8 +104,12 @@ type ComunicationServer interface {
 	Comands_Leia_Broker(context.Context, *ComandLBRequest) (*ComandLBReply, error)
 	// Sends Comands_Broker_Fulcrum
 	Comands_Broker_Fulcrum(context.Context, *ComandBFRequest) (*ComandBFReply, error)
-	// Sends Comandas_Informantes_Fulcrum
+	// Sends Comands_Informantes_Fulcrum
 	Comands_Informantes_Fulcrum(context.Context, *ComandIFRequest) (*ComandIFReply, error)
+	// Sends Comands_Request_Hashing
+	Comands_Request_Hashing(context.Context, *PingMsg) (*HashRepply, error)
+	// Sends Comands_Fulcrum_Fulcrum
+	Comands_Fulcrum_Fulcrum(context.Context, *ComandFFDone) (*PingMsg, error)
 	mustEmbedUnimplementedComunicationServer()
 }
 
@@ -102,6 +128,12 @@ func (UnimplementedComunicationServer) Comands_Broker_Fulcrum(context.Context, *
 }
 func (UnimplementedComunicationServer) Comands_Informantes_Fulcrum(context.Context, *ComandIFRequest) (*ComandIFReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Comands_Informantes_Fulcrum not implemented")
+}
+func (UnimplementedComunicationServer) Comands_Request_Hashing(context.Context, *PingMsg) (*HashRepply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Comands_Request_Hashing not implemented")
+}
+func (UnimplementedComunicationServer) Comands_Fulcrum_Fulcrum(context.Context, *ComandFFDone) (*PingMsg, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Comands_Fulcrum_Fulcrum not implemented")
 }
 func (UnimplementedComunicationServer) mustEmbedUnimplementedComunicationServer() {}
 
@@ -188,6 +220,42 @@ func _Comunication_Comands_Informantes_Fulcrum_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Comunication_Comands_Request_Hashing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PingMsg)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ComunicationServer).Comands_Request_Hashing(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/helloworld.Comunication/Comands_Request_Hashing",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ComunicationServer).Comands_Request_Hashing(ctx, req.(*PingMsg))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Comunication_Comands_Fulcrum_Fulcrum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ComandFFDone)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ComunicationServer).Comands_Fulcrum_Fulcrum(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/helloworld.Comunication/Comands_Fulcrum_Fulcrum",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ComunicationServer).Comands_Fulcrum_Fulcrum(ctx, req.(*ComandFFDone))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Comunication_ServiceDesc is the grpc.ServiceDesc for Comunication service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -210,6 +278,14 @@ var Comunication_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Comands_Informantes_Fulcrum",
 			Handler:    _Comunication_Comands_Informantes_Fulcrum_Handler,
+		},
+		{
+			MethodName: "Comands_Request_Hashing",
+			Handler:    _Comunication_Comands_Request_Hashing_Handler,
+		},
+		{
+			MethodName: "Comands_Fulcrum_Fulcrum",
+			Handler:    _Comunication_Comands_Fulcrum_Fulcrum_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
