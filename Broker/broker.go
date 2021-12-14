@@ -20,7 +20,7 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIB
 	log.Printf("Operacion Received: %v", in.GetOperacion())
 	// reloj_vector_Informante := in.GetRelojVector()
 	var ip = ""
-	Rand_num := rand.Intn(3)
+	Rand_num := rand.Intn(2) + 1
 
 	if Rand_num == 0 {
 		ip = Server1Address
