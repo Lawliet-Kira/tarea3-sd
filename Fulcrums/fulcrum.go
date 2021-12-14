@@ -75,17 +75,6 @@ func createFile(path string) {
 }
 
 // Get preferred outbound ip of this machine
-func GetOutboundIP() net.IP {
-	conn, err := net.Dial("udp", "8.8.8.8:80")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer conn.Close()
-
-	localAddr := conn.LocalAddr().(*net.UDPAddr)
-
-	return localAddr.IP
-}
 
 func AddCity(planeta string, ciudad string, valor string) string {
 
@@ -481,24 +470,57 @@ func (s *server) Comands_Broker_Fulcrum(ctx context.Context, in *pb.ComandBFRequ
 	return &pb.ComandBFReply{CantRebelds: cant_rebeldes, RelojVector: reloj_vector_s}, nil
 }
 
-/*func (s *server) Comands_Fulcrum_Fulcrum(ctx context.Context, in *pb.ComandFFRequest) (*pb.ComandFFReply, error) {
-
-	return &pb.ComandFFReply{RelojVector: reloj_vector_s}, nil
-}*/
+func (s *server) Comands_Request_Hashing(ctx context.Context, in *pb.PingMsg) (*pb.HashRepply, error) {
+	
+	pbHashing := []*pb.HashRepply
+	
+	for _, keyvalue range Hashing{
+		temp := pb.KeyValue{
+			Planeta: keyvalue.planeta
+			Reloj_vector: keyvalue.vector
+		}
+		pbHashing = append(pbHashing, temp)
+	}
+	
+	return &pb.HashReply{Hashing: pbHashing, nil
+}
 
 func ConsistenciaEventual() {
 
+
 	for true {
-		time.Sleep(10 * time.Second)
+
+		time.Sleep(20 * time.Second)
 		fmt.Println("Consistencia Eventual...")
-		//MENSAJE CONSISTENCIA EVENTUAL
+		//HACER PING
+		conn, err := grpc.Dial(Server1Address, grpc.WithInsecure(), grpc.WithBlock())
+
+		if err != nil {
+			log.Fatalf("did not connect: %v", err)
+		}
+
+		defer conn.Close()
+
+		// Client Stub to perform RPCs
+		client := pb.NewComunicationClient(conn)
+		// Contact the server and psirint out its response.
+		ctx := context.Background()
+
+		señal := "Pingeao"
+
+		r, _ := client.Comands_Request_Hashing(ctx, &pb.PingMsg{Señal: señal})
+
+		fmt.Println("R: ", r)
 
 	}
 
 }
 
 const (
-	port = ":50052"
+	port           = ":50052"
+	Server1Address = "10.6.43.113:50052"
+	Server2Address = "10.6.43.114:50052"
+	Server3Address = "10.6.43.115:50052"
 )
 
 // GetLocalIP returns the non loopback local IP of the host
@@ -540,20 +562,12 @@ func main() {
 
 	var ip string = GetLocalIP()
 
-	host, _ := os.Hostname()
-	addrs, _ := net.LookupIP(host)
-	for _, addr := range addrs {
-		if ipv4 := addr.To4(); ipv4 != nil {
-			fmt.Println("IPv4: ", ipv4)
-		}
-	}
-
-	fmt.Println("localip: (", ip, ")")
 	//Fulcrum dominante
 	if string(ip) == "10.6.43.114" {
 		fmt.Println("Soy el Fulcrum dominante uwu")
 		// Function each seconds
 		go ConsistenciaEventual()
+
 	}
 
 	// Llamar Server() con los detalles de puerto para realizar un bloquero
