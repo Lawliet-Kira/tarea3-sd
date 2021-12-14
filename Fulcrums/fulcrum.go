@@ -31,7 +31,10 @@ var idFulcrum int
 
 //Crea una nueva Keyvalue planeta, vector, inicializando este ultimo en [0,0,0]
 func newKeyvalue(planeta string) *Keyvalue {
-	var vector []int32{0,0,0}
+	var vector []int32
+	vector = append(vector, 0)
+	vector = append(vector, 0)
+	vector = append(vector, 0)
 	new := Keyvalue{planeta: planeta, vector: vector}
 	return &new
 }
@@ -480,6 +483,7 @@ func ConsistenciaEventual() {
 		fmt.Println("Pingeao")
 		r, _ := client.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
 		newHash := MergeHashing(Hashing, r.GetHashing())
+		fmt.Println(newHash)
 		fmt.Println("R: ", r)
 
 	}
@@ -510,20 +514,21 @@ func GetLocalIP() string {
 	return ""
 }
 
-func MergeHashing(Hash1 []Keyvalue, Hash2 []*pb.HashRepply_KeyValue) []string {
+func MergeHashing(Hash1 []Keyvalue, Hash2 []*pb.HashRepply_KeyValue) []Keyvalue {
 	var Hash2k []Keyvalue
-	for _, keyvalue := range Hash2{
-		temp := KeyValue{planeta: keyvalue.GetPlaneta(), vector: keyvalue.GetRelojVector()}
-		Hash1 = append(Hash2k, temp)	
-	} 
-	check := make(map[Keyvalue]int)
+	for _, keyvalue := range Hash2 {
+		temp := Keyvalue{planeta: keyvalue.GetPlaneta(), vector: keyvalue.GetRelojVector()}
+		Hash1 = append(Hash2k, temp)
+	}
+	check := make(map[string]int)
 	res := make([]Keyvalue, 0)
 	for _, val := range Hash1 {
-		check[val] = 1
+		check[val.planeta] = 1
 	}
 
-	for letter, _ := range check {
-		res = append(res, letter)
+	for planeta, _ := range check {
+		index := findHashing(planeta)
+		res = append(res, Hash1[index])
 	}
 	fmt.Println(res)
 	return res
