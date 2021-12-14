@@ -178,6 +178,7 @@ func UpdateName(planeta string, ciudad string, valor string) string {
 	}
 
 	index := findHashing(planeta)
+
 	if index != -1 {
 		Hashing[index].vector[idFulcrum]++
 		log.Println(Hashing[index].vector)
@@ -230,6 +231,7 @@ func UpdateNumber(planeta string, ciudad string, valor string) string {
 	}
 
 	index := findHashing(planeta)
+
 	if index != -1 {
 		Hashing[index].vector[idFulcrum]++
 		log.Println(Hashing[index].vector)
@@ -281,6 +283,7 @@ func DeleteCity(planeta string, ciudad string) string {
 	}
 
 	index := findHashing(planeta)
+
 	if index != -1 {
 		Hashing[index].vector[idFulcrum]++
 		log.Println(Hashing[index].vector)
@@ -306,7 +309,6 @@ func EscribirLog(operacion string, planeta string, ciudad string, valor string) 
 	createFile(path)
 
 	//ESCRIBIR EL LOG AL FINAL DEL ARCHIVO
-
 	op := ""
 
 	switch operacion {
