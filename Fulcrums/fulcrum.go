@@ -486,7 +486,7 @@ func ConsistenciaEventual() {
 
 	for true {
 
-		time.Sleep(20 * time.Second)
+		time.Sleep(60 * time.Second)
 		fmt.Println("Consistencia Eventual...")
 		//HACER PING
 		conn, err := grpc.Dial(Server3Address, grpc.WithInsecure(), grpc.WithBlock())
