@@ -98,13 +98,14 @@ message PingMsg {
 }
 
 message HashRepply {
+  message KeyValue {
+    string planeta = 1;
+    repeated int32 reloj_vector= 2;
+  }
   repeated KeyValue hashing = 1;
 }
 
-message KeyValue {
-  string planeta = 1;
-  repeated int32 reloj_vector= 2;
-}
+
 message ComandFFDone {
   repeated string text = 1;
   repeated int32 reloj_vector = 2; // ['x', 'y', 'z']
