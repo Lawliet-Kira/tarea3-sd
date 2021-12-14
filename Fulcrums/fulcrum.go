@@ -469,15 +469,14 @@ func ApplyChanges(pos int32, val int32, valDom int32, logs []string, target stri
 
 		for _, accion := range logs {
 
-			accion = strings.TrimSuffix(accion, "\n")
 			split_line := strings.Split(accion, " ")
-			operacion := split_line[0]
-			planeta := split_line[1]
-			ciudad := split_line[2]
+			operacion := strings.TrimSuffix(split_line[0], "\n")
+			planeta := strings.TrimSuffix(split_line[1], "\n")
+			ciudad := strings.TrimSuffix(split_line[2], "\n")
 			valor := ""
 
 			if len(split_line) > 3 {
-				valor = split_line[3]
+				valor = strings.TrimSuffix(split_line[3], "\n")
 			}
 
 			switch operacion {
@@ -580,7 +579,7 @@ func ConsistenciaEventual() {
 			ApplyChanges(2, reloj1[2], relojDom[2], logs1, target) // sd: [0,3,0] se: [0,0,4]
 			fmt.Println("APPLY CHANGES S3")
 			ApplyChanges(0, reloj2[0], relojDom[0], logs2, target) // sd: [0,3,0] se: [1,0,0]
-			fmt.Println("APPLY CHANGES S1")
+
 			// Lectura del archivo de planeta
 			//Abrir archivo
 			input, err := ioutil.ReadFile(filepath)
