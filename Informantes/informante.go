@@ -121,7 +121,7 @@ func main() {
 
 		client2 := pb.NewComunicationClient(conn2)
 
-		r2, _ := client2.Comands_Informantes_Fulcrum(ctx, &pb.ComandIFRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, Valor: valor, Ip: FulcrumAddress})
+		r2, _ := client2.Comands_Informantes_Fulcrum(ctx, &pb.ComandIFRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, Valor: valor})
 
 		fmt.Println("Reply: ", r2)
 

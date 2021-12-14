@@ -90,7 +90,7 @@ message ComandIFRequest {
 
 message ComandIFReply {
   repeated int32 reloj_vector = 1; // ['x', 'y', 'z']
-  string ip = 2;
+
 }
 
 message PingMsg {

@@ -15,8 +15,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-var idFulcrum int
-
 type server struct {
 	pb.UnimplementedComunicationServer
 }
@@ -29,13 +27,11 @@ type Keyvalue struct {
 
 //Lista de Keyvalues para guardar los relojes de cada planeta
 var Hashing []Keyvalue
+var idFulcrum int
 
 //Crea una nueva Keyvalue planeta, vector, inicializando este ultimo en [0,0,0]
 func newKeyvalue(planeta string) *Keyvalue {
-	var vector []int32
-	vector = append(vector, 0)
-	vector = append(vector, 0)
-	vector = append(vector, 0)
+	var vector []int32{0,0,0}
 	new := Keyvalue{planeta: planeta, vector: vector}
 	return &new
 }
@@ -73,8 +69,6 @@ func createFile(path string) {
 	}
 
 }
-
-// Get preferred outbound ip of this machine
 
 func AddCity(planeta string, ciudad string, valor string) string {
 
@@ -361,16 +355,6 @@ func (s *server) Comands_Informantes_Fulcrum(ctx context.Context, in *pb.ComandI
 	planeta := in.GetNombrePlaneta()
 	ciudad := in.GetNombreCiudad()
 	valor := in.GetValor()
-	localip := in.GetIp()
-
-	switch localip {
-	case "10.6.43.113:50052":
-		idFulcrum = 0
-	case "10.6.43.114:50052":
-		idFulcrum = 1
-	case "10.6.43.115:50052":
-		idFulcrum = 2
-	}
 
 	fmt.Println("operacion: ", operacion)
 	fmt.Println("nameplanet: ", planeta)
@@ -453,16 +437,6 @@ func (s *server) Comands_Broker_Fulcrum(ctx context.Context, in *pb.ComandBFRequ
 	reloj_vector_s := []int32{1, 2, 1}
 	planeta := in.GetNombrePlaneta()
 	ciudad := in.GetNombreCiudad()
-	localip := in.GetIp()
-
-	switch localip {
-	case "10.6.43.113:50052":
-		idFulcrum = 0
-	case "10.6.43.114:50052":
-		idFulcrum = 1
-	case "10.6.43.115:50052":
-		idFulcrum = 2
-	}
 
 	// LOGICA OPERACION GET
 	cant_rebeldes := GetNumberRebelds(planeta, ciudad)
@@ -505,7 +479,7 @@ func ConsistenciaEventual() {
 		signal := "Pingeao"
 		fmt.Println("Pingeao")
 		r, _ := client.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
-
+		newHash := MergeHashing(Hashing, r.GetHashing())
 		fmt.Println("R: ", r)
 
 	}
@@ -536,6 +510,25 @@ func GetLocalIP() string {
 	return ""
 }
 
+func MergeHashing(Hash1 []Keyvalue, Hash2 []*pb.HashRepply_KeyValue) []string {
+	var Hash2k []Keyvalue
+	for _, keyvalue := range Hash2{
+		temp := KeyValue{planeta: keyvalue.GetPlaneta(), vector: keyvalue.GetRelojVector()}
+		Hash1 = append(Hash2k, temp)	
+	} 
+	check := make(map[Keyvalue]int)
+	res := make([]Keyvalue, 0)
+	for _, val := range Hash1 {
+		check[val] = 1
+	}
+
+	for letter, _ := range check {
+		res = append(res, letter)
+	}
+	fmt.Println(res)
+	return res
+}
+
 func main() {
 
 	// Crear un gRPC canal para comunicarse con el servidor
@@ -557,9 +550,16 @@ func main() {
 	log.Printf("Server Fulcrum escuchando en %v", lis.Addr())
 
 	var ip string = GetLocalIP()
-
+	switch ip {
+	case "10.6.43.113":
+		idFulcrum = 0
+	case "10.6.43.114":
+		idFulcrum = 1
+	case "10.6.43.115":
+		idFulcrum = 2
+	}
 	//Fulcrum dominante
-	if string(ip) == "10.6.43.114" {
+	if idFulcrum == 1 {
 		fmt.Println("Soy el Fulcrum dominante uwu")
 		// Function each seconds
 		go ConsistenciaEventual()
