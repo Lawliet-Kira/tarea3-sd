@@ -472,14 +472,14 @@ func (s *server) Comands_Broker_Fulcrum(ctx context.Context, in *pb.ComandBFRequ
 
 func (s *server) Comands_Request_Hashing(ctx context.Context, in *pb.PingMsg) (*pb.HashRepply, error) {
 
-	pbHashing := []*pb.HashRepply_KeyValues{}
+	pbHashing := []*pb.HashRepply_KeyValue{}
 
 	for _, keyvalue := range Hashing {
 		temp := pb.HashRepply_KeyValue{Planeta: keyvalue.planeta, RelojVector: keyvalue.vector}
-		pbHashing = append(pbHashing, temp)
+		pbHashing = append(pbHashing, &temp)
 	}
 
-	return &pb.HashReply{Hashing: pbHashing}, nil
+	return &pb.HashRepply{Hashing: pbHashing}, nil
 }
 
 func ConsistenciaEventual() {
