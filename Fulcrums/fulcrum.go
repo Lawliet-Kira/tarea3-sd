@@ -525,7 +525,7 @@ func main() {
 	ifaces, err := net.Interfaces()
 	// handle err
 	for _, i := range ifaces {
-		addrs, err := i.Addrs()
+		addrs, _ := i.Addrs()
 		// handle err
 		for _, addr := range addrs {
 			switch v := addr.(type) {
