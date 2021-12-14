@@ -30,7 +30,7 @@ type ComunicationClient interface {
 	Comands_Request_Hashing(ctx context.Context, in *PingMsg, opts ...grpc.CallOption) (*HashRepply, error)
 	// Sends Comands_Fulcrum_Fulcrum
 	Comands_Request_Files(ctx context.Context, in *PingMsg, opts ...grpc.CallOption) (*ComandFFFiles, error)
-	Comands_Fulcrum_Fulcrum(ctx context.Context, in *ComandFFFiles, opts ...grpc.CallOption) (*PingMsg, error)
+	Comands_Retrieve_Files(ctx context.Context, in *ComandFFFiles, opts ...grpc.CallOption) (*PingMsg, error)
 }
 
 type comunicationClient struct {
@@ -95,9 +95,9 @@ func (c *comunicationClient) Comands_Request_Files(ctx context.Context, in *Ping
 	return out, nil
 }
 
-func (c *comunicationClient) Comands_Fulcrum_Fulcrum(ctx context.Context, in *ComandFFFiles, opts ...grpc.CallOption) (*PingMsg, error) {
+func (c *comunicationClient) Comands_Retrieve_Files(ctx context.Context, in *ComandFFFiles, opts ...grpc.CallOption) (*PingMsg, error) {
 	out := new(PingMsg)
-	err := c.cc.Invoke(ctx, "/helloworld.Comunication/Comands_Fulcrum_Fulcrum", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/helloworld.Comunication/Comands_Retrieve_Files", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ type ComunicationServer interface {
 	Comands_Request_Hashing(context.Context, *PingMsg) (*HashRepply, error)
 	// Sends Comands_Fulcrum_Fulcrum
 	Comands_Request_Files(context.Context, *PingMsg) (*ComandFFFiles, error)
-	Comands_Fulcrum_Fulcrum(context.Context, *ComandFFFiles) (*PingMsg, error)
+	Comands_Retrieve_Files(context.Context, *ComandFFFiles) (*PingMsg, error)
 	mustEmbedUnimplementedComunicationServer()
 }
 
@@ -146,8 +146,8 @@ func (UnimplementedComunicationServer) Comands_Request_Hashing(context.Context, 
 func (UnimplementedComunicationServer) Comands_Request_Files(context.Context, *PingMsg) (*ComandFFFiles, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Comands_Request_Files not implemented")
 }
-func (UnimplementedComunicationServer) Comands_Fulcrum_Fulcrum(context.Context, *ComandFFFiles) (*PingMsg, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Comands_Fulcrum_Fulcrum not implemented")
+func (UnimplementedComunicationServer) Comands_Retrieve_Files(context.Context, *ComandFFFiles) (*PingMsg, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Comands_Retrieve_Files not implemented")
 }
 func (UnimplementedComunicationServer) mustEmbedUnimplementedComunicationServer() {}
 
@@ -270,20 +270,20 @@ func _Comunication_Comands_Request_Files_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Comunication_Comands_Fulcrum_Fulcrum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Comunication_Comands_Retrieve_Files_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ComandFFFiles)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ComunicationServer).Comands_Fulcrum_Fulcrum(ctx, in)
+		return srv.(ComunicationServer).Comands_Retrieve_Files(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/helloworld.Comunication/Comands_Fulcrum_Fulcrum",
+		FullMethod: "/helloworld.Comunication/Comands_Retrieve_Files",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ComunicationServer).Comands_Fulcrum_Fulcrum(ctx, req.(*ComandFFFiles))
+		return srv.(ComunicationServer).Comands_Retrieve_Files(ctx, req.(*ComandFFFiles))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -320,8 +320,8 @@ var Comunication_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Comunication_Comands_Request_Files_Handler,
 		},
 		{
-			MethodName: "Comands_Fulcrum_Fulcrum",
-			Handler:    _Comunication_Comands_Fulcrum_Fulcrum_Handler,
+			MethodName: "Comands_Retrieve_Files",
+			Handler:    _Comunication_Comands_Retrieve_Files_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
