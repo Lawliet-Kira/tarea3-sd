@@ -451,7 +451,7 @@ func (s *server) Comands_Retrieve_Files(ctx context.Context, in *pb.ComandFFFile
 
 	// Delete Logs
 
-	path_logs := path + "/logs/" + target
+	//path_logs := path + "/logs/" + target
 
 	/*e := os.Remove(path_logs + ".txt")
 
