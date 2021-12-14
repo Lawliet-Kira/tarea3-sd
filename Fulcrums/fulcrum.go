@@ -590,9 +590,9 @@ func ConsistenciaEventual() {
 			relojDom = Hashing[findHashing(Hashing, target)].vector
 
 			// Replicación de registro de planeta y reloj sobre Servidores Esclavos
-			r1, _ = client.Comands_Retrieve_Files(ctx, &pb.ComandFFFiles{Text: linesReg, RelojVector: relojDom, Planeta: target})
+			client.Comands_Retrieve_Files(ctx, &pb.ComandFFFiles{Text: linesReg, RelojVector: relojDom, Planeta: target})
 
-			r2, _ = client2.Comands_Retrieve_Files(ctx2, &pb.ComandFFFiles{Text: linesReg, RelojVector: relojDom, Planeta: target})
+			client2.Comands_Retrieve_Files(ctx2, &pb.ComandFFFiles{Text: linesReg, RelojVector: relojDom, Planeta: target})
 
 		}
 
