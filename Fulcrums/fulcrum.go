@@ -520,11 +520,27 @@ func main() {
 	pb.RegisterComunicationServer(s, &server{})
 
 	log.Printf("Server Fulcrum escuchando en %v", lis.Addr())
-	var localip string = string(GetOutboundIP())
-	log.Println(localip)
 
+	var ip net.IP
+	ifaces, err := net.Interfaces()
+	// handle err
+	for _, i := range ifaces {
+		addrs, err := i.Addrs()
+		// handle err
+		for _, addr := range addrs {
+			switch v := addr.(type) {
+			case *net.IPNet:
+				ip = v.IP
+			case *net.IPAddr:
+				ip = v.IP
+			}
+			// process IP address
+		}
+	}
+
+	fmt.Println("localip: (", ip, ")")
 	//Fulcrum dominante
-	if localip == "10.6.43.114" {
+	if string(ip) == "10.6.43.114" {
 		fmt.Println("Soy el Fulcrum dominante uwu")
 		// Function each seconds
 		go ConsistenciaEventual()
