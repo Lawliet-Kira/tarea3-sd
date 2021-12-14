@@ -37,8 +37,10 @@ service Comunication {
     // Sends Comands_Informantes_Fulcrum
     rpc Comands_Informantes_Fulcrum (ComandIFRequest) returns (ComandIFReply) { }
 
+    // Sends Comands_Request_Hashing
+    rpc Comands_Request_Hashing (PingMsg) returns (HashRepply) { }
     // Sends Comands_Fulcrum_Fulcrum
-    rpc Comands_Fulcrum_Fulcrum (PingMsg) returns (ComandFFReply) { }
+    rpc Comands_Fulcrum_Fulcrum (ComandFFDone) returns (PingMsg) { }
 
 }
 
@@ -95,12 +97,15 @@ message PingMsg {
   string señal = 1;
 }
 
-message ComandFFRequest {
-  repeated string log = 1;
-  repeated int32 reloj_vector = 1; // ['x', 'y', 'z']
+message HashRepply {
+  repeated KeyValue hashing = 1;
 }
 
-message ComandFFReply {
+message KeyValue {
+  string planeta = 1;
+  repeated int32 reloj_vector= 2;
+}
+message ComandFFDone {
   repeated string text = 1;
   repeated int32 reloj_vector = 1; // ['x', 'y', 'z']
 }
