@@ -491,7 +491,7 @@ func (s *server) Comands_Request_Files(ctx context.Context, in *pb.PingMsg) (*pb
 	//Enviar logs y reloj del planeta
 
 	//Abrir archivo
-	input, err := ioutil.ReadFile(path)
+	input, err := ioutil.ReadFile(logpath)
 
 	if err != nil {
 		log.Fatalln(err)
