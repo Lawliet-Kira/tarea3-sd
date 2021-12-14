@@ -453,11 +453,11 @@ func (s *server) Comands_Retrieve_Files(ctx context.Context, in *pb.ComandFFFile
 
 	path_logs := path + "/logs/" + target
 
-	e := os.Remove(path_logs + ".txt")
+	/*e := os.Remove(path_logs + ".txt")
 
 	if e != nil {
 		log.Fatal(e)
-	}
+	}*/
 
 	return &pb.PingMsg{Signal: ""}, nil
 

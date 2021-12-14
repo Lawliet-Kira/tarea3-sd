@@ -81,7 +81,7 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 
 	if len(reloj_vector_Leia) == 0 {
 
-		Rand_num := rand.Intn(3)
+		Rand_num := rand.Intn(2) + 1
 
 		if Rand_num == 0 {
 			ip = Server1Address
