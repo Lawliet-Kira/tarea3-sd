@@ -94,7 +94,7 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 		}
 
 	} else {
-		ip = Server2Address
+		/*ip = Server2Address
 		conn2, err2 := grpc.Dial(Server2Address, grpc.WithInsecure(), grpc.WithBlock())
 
 		if err2 != nil {
@@ -106,7 +106,7 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 		// Contact the server and psirint out its response.
 		ctx2 := context.Background()
 
-		conn2.Close()
+		conn2.Close()*/
 	}
 
 	// REALIZAR CONEXION CON SERVIDORES
