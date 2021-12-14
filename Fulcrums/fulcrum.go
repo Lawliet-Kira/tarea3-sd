@@ -421,8 +421,10 @@ func (s *server) Comands_Request_Files(ctx context.Context, in *pb.PingMsg) (*pb
 		log.Fatalln(err)
 	}
 
+	var inputStr string = strings.TrimSuffix(string(input), "\n")
+
 	// Matrix con las lineas del archivo
-	lines := strings.Split(string(input), "\n")
+	lines := strings.Split(inputStr, "\n")
 
 	return &pb.ComandFFFiles{Text: lines, RelojVector: reloj_vector}, nil
 
