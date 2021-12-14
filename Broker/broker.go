@@ -18,12 +18,22 @@ type server struct {
 func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIBRequest) (*pb.ComandIBReply, error) {
 	rand.Seed(time.Now().UnixNano())
 	log.Printf("Operacion Received: %v", in.GetOperacion())
-	reloj_vector_Informante := in.GetRelojVector()
+	// reloj_vector_Informante := in.GetRelojVector()
 	var ip = ""
+	Rand_num := rand.Intn(2) + 1
 
-	if len(reloj_vector_Informante) == 0 {
+	if Rand_num == 0 {
+		ip = Server1Address
+	}
+	if Rand_num == 1 {
+		ip = Server2Address
+	}
+	if Rand_num == 2 {
+		ip = Server3Address
+	}
+	/* if len(reloj_vector_Informante) == 0 {
 
-		Rand_num := rand.Intn(3)
+		Rand_num := rand.Intn(2)+1
 
 		if Rand_num == 0 {
 			ip = Server1Address
@@ -35,24 +45,23 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIB
 			ip = Server3Address
 		}
 
-	} else {
-		//AQUÍ HAY QUE ENVIAR MENSAJE A FULCRUMS TAL QUE ME RETORNE SUS RELOJES DE VECTORES
+	}*/
+	/*else {
+	//AQUÍ HAY QUE ENVIAR MENSAJE A FULCRUMS TAL QUE ME RETORNE SUS RELOJES DE VECTORES
 
-		/* CODIGO */
+	/* CODIGO */
 
-		/*reloj_vector_s1 := rvs1
-		reloj_vector_s2 := rvs2
-		reloj_vector_s3 := rvs3*/
+	/*reloj_vector_s1 := rvs1
+	reloj_vector_s2 := rvs2
+	reloj_vector_s3 := rvs3*/
 
-		//AQUÍ SE COMPARAN LOS RELOJES PARA VER CUAL SERVER ES EL QUE CUMPLE CON "READ YOUR WRITES
+	//AQUÍ SE COMPARAN LOS RELOJES PARA VER CUAL SERVER ES EL QUE CUMPLE CON "READ YOUR WRITES
 
-		/*CODIGO*/
+	/*CODIGO*/
 
-	}
+	///	}
 
 	//DEBUG
-
-	ip = "10.6.43.115:50052"
 
 	return &pb.ComandIBReply{Ip: ip}, nil
 }
