@@ -504,6 +504,7 @@ func ApplyChanges(pos int32, val int32, valDom int32, logs []string, target stri
 
 func ConsistenciaEventual() {
 
+	fmt.Println("Consistencia Eventual...1")
 	// Establecer conexión con servidor 3
 	path, _ := os.Getwd()
 
