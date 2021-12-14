@@ -74,6 +74,19 @@ func createFile(path string) {
 
 }
 
+// Get preferred outbound ip of this machine
+func GetOutboundIP() net.IP {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close()
+
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+
+	return localAddr.IP
+}
+
 func AddCity(planeta string, ciudad string, valor string) string {
 
 	// "nombre_planeta nombre_ciudad [nuevo_valor]"
@@ -468,11 +481,20 @@ func (s *server) Comands_Broker_Fulcrum(ctx context.Context, in *pb.ComandBFRequ
 	return &pb.ComandBFReply{CantRebelds: cant_rebeldes, RelojVector: reloj_vector_s}, nil
 }
 
-func listenFunction() {
+/*func (s *server) Comands_Fulcrum_Fulcrum(ctx context.Context, in *pb.ComandFFRequest) (*pb.ComandFFReply, error) {
+
+	return &pb.ComandFFReply{RelojVector: reloj_vector_s}, nil
+}*/
+
+func ConsistenciaEventual() {
+
 	for true {
-		fmt.Println("10 segundos")
 		time.Sleep(10 * time.Second)
+		fmt.Println("Consistencia Eventual...")
+		//MENSAJE CONSISTENCIA EVENTUAL
+
 	}
+
 }
 
 const (
@@ -498,9 +520,15 @@ func main() {
 	pb.RegisterComunicationServer(s, &server{})
 
 	log.Printf("Server Fulcrum escuchando en %v", lis.Addr())
+	var localip string = string(GetOutboundIP())
+	log.Println(localip)
 
-	// Function each seconds
-	go listenFunction()
+	//Fulcrum dominante
+	if localip == "10.6.43.114" {
+		fmt.Println("Soy el Fulcrum dominante uwu")
+		// Function each seconds
+		go ConsistenciaEventual()
+	}
 
 	// Llamar Server() con los detalles de puerto para realizar un bloquero
 	// de espera hasta que el proceso sea killed o Stop() es llamado

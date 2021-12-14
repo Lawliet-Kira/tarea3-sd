@@ -34,8 +34,11 @@ service Comunication {
     // Sends Comands_Broker_Fulcrum
     rpc Comands_Broker_Fulcrum (ComandBFRequest) returns (ComandBFReply) { }
 
-    // Sends Comandas_Informantes_Fulcrum
+    // Sends Comands_Informantes_Fulcrum
     rpc Comands_Informantes_Fulcrum (ComandIFRequest) returns (ComandIFReply) { }
+
+    // Sends Comands_Fulcrum_Fulcrum
+    rpc Comands_Fulcrum_Fulcrum (PingMsg) returns (ComandFFReply) { }
 
 }
 
@@ -86,4 +89,18 @@ message ComandIFRequest {
 message ComandIFReply {
   repeated int32 reloj_vector = 1; // ['x', 'y', 'z']
   string ip = 2;
+}
+
+message PingMsg {
+  string señal = 1;
+}
+
+message ComandFFRequest {
+  repeated string log = 1;
+  repeated int32 reloj_vector = 1; // ['x', 'y', 'z']
+}
+
+message ComandFFReply {
+  repeated string text = 1;
+  repeated int32 reloj_vector = 1; // ['x', 'y', 'z']
 }
