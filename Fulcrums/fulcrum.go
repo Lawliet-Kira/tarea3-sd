@@ -578,7 +578,7 @@ func ConsistenciaEventual() {
 
 			// Aplicar cambios del Log al registro planetario
 			ApplyChanges(2, reloj1[2], relojDom[2], logs1, target) // sd: [0,3,0] se: [0,0,4]
-			ApplyChanges(0, reloj2[0], relojDom[0], logs2, target) // sd: [0,0,0] se: [0,0,2]
+			ApplyChanges(0, reloj2[0], relojDom[0], logs2, target) // sd: [0,3,0] se: [1,0,0]
 
 			// Lectura del archivo de planeta
 			//Abrir archivo
@@ -591,7 +591,7 @@ func ConsistenciaEventual() {
 			// Matrix con las lineas del archivo
 			linesReg := strings.Split(string(input), "\n")
 			relojDom = Hashing[findHashing(Hashing, target)].vector
-
+			fmt.Println("RELOJ DOMINANTE FINAL: ", relojDom)
 			// Replicación de registro de planeta y reloj sobre Servidores Esclavos
 			client.Comands_Retrieve_Files(ctx, &pb.ComandFFFiles{Text: linesReg, RelojVector: relojDom, Planeta: target})
 
