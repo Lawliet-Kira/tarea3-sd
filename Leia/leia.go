@@ -117,6 +117,10 @@ func main() {
 
 		indice_planeta := findHashing(relojes_Leia, nombre_planeta)
 
+		if indice_planeta == -1 {
+			Hashing = append(Hashing, {planeta: nombre_planeta, vector: int32{0,0,0}})
+		}
+
 		reloj_vector_L := Hashing[indice_planeta].vector
 
 		r, _ := client.Comands_Leia_Broker(ctx, &pb.ComandLBRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, RelojVector: reloj_vector_L})

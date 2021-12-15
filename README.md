@@ -1,5 +1,10 @@
 ### Tarea 3 - Sistema Distribuido
-
+### GRUPO 32
+#### Nombres + Rol:
+*  Diego Reinoso   + 201523518-K
+*  David Monsalves + 201773547-3
+*  Nicolas Silva   + 201710516-7
+    
 Para la ejecución de la tarea, es necesario desplegar 6 terminales; una para cada entidad a ejecutar:
 
 *   Informante A. Tano      - Maquina dist 125
