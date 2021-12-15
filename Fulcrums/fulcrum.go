@@ -44,7 +44,7 @@ func findHashing(Hashing []Keyvalue, planeta string) int {
 
 	for i, keyvalue := range Hashing {
 		if keyvalue.planeta == planeta {
-			fmt.Println("Planeta encontrado")
+			// fmt.Println("Planeta encontrado")
 			return i
 		}
 	}
@@ -64,13 +64,10 @@ func AddCity(planeta string, ciudad string, valor string) string {
 
 	path = path + "/planetas/" + planeta + ".txt"
 
-	fmt.Println("current path: ", path)
-
 	// VERIFICAR QUE EL ARCHIVO EXISTE
 	if _, err := os.Stat(path); err == nil {
 
 		// path/to/whatever exists
-		fmt.Println("El archivo existe")
 		index := findHashing(Hashing, planeta)
 
 		log.Println(Hashing[index].vector)
@@ -122,8 +119,6 @@ func UpdateName(planeta string, ciudad string, valor string) string {
 
 	path = path + "/planetas/" + planeta + ".txt"
 
-	fmt.Println("current path: ", path)
-
 	//Abrir archivo
 	input, err := ioutil.ReadFile(path)
 
@@ -134,8 +129,6 @@ func UpdateName(planeta string, ciudad string, valor string) string {
 
 	// Matrix con las lineas del archivo
 	lines := strings.Split(string(input), "\n")
-
-	fmt.Println("Nueva_ciudad: ", valor, "-----")
 
 	// Leer linea x linea
 	for i, line := range lines {
@@ -278,10 +271,10 @@ func (s *server) Comands_Informantes_Fulcrum(ctx context.Context, in *pb.ComandI
 	ciudad := in.GetNombreCiudad()
 	valor := in.GetValor()
 
-	fmt.Println("operacion: ", operacion)
-	fmt.Println("nameplanet: ", planeta)
-	fmt.Println("namecity: ", ciudad)
-	fmt.Println("value: ", valor)
+	// fmt.Println("operacion: ", operacion)
+	// fmt.Println("nameplanet: ", planeta)
+	// fmt.Println("namecity: ", ciudad)
+	// fmt.Println("value: ", valor)
 
 	switch operacion {
 
@@ -343,13 +336,9 @@ func GetNumberRebelds(planeta string, ciudad string) string {
 	lines := strings.Split(string(input), "\n")
 
 	for _, line := range lines {
-		fmt.Println("line ->(", line, ")")
-		fmt.Println("ciudad ->(", ciudad, ")")
+
 		if strings.Contains(line, ciudad) {
 			split_line := strings.Split(line, " ")
-			fmt.Println("1 ->", split_line[0])
-			fmt.Println("2 ->", split_line[1])
-			fmt.Println("3 ->", split_line[2])
 			cant_rebeldes = split_line[2]
 			break
 		}
@@ -361,9 +350,10 @@ func GetNumberRebelds(planeta string, ciudad string) string {
 func (s *server) Comands_Broker_Fulcrum(ctx context.Context, in *pb.ComandBFRequest) (*pb.ComandBFReply, error) {
 
 	// CHANGE
-	reloj_vector_s := []int32{1, 2, 1}
 	planeta := in.GetNombrePlaneta()
 	ciudad := in.GetNombreCiudad()
+	indice_planeta := findHashing(Hashing, planeta)
+	reloj_vector_s := Hashing[indice_planeta].vector
 
 	// LOGICA OPERACION GET
 	cant_rebeldes := GetNumberRebelds(planeta, ciudad)
@@ -452,14 +442,13 @@ func (s *server) Comands_Retrieve_Files(ctx context.Context, in *pb.ComandFFFile
 	}
 
 	// Delete Logs
+	path_logs := path + "/logs/" + target
 
-	//path_logs := path + "/logs/" + target
-
-	/*e := os.Remove(path_logs + ".txt")
+	e := os.Remove(path_logs + ".txt")
 
 	if e != nil {
 		log.Fatal(e)
-	}*/
+	}
 
 	return &pb.PingMsg{Signal: ""}, nil
 
@@ -469,28 +458,19 @@ func ApplyChanges(pos int32, val int32, valDom int32, logs []string, target stri
 
 	if val > valDom {
 
-		log.Println("DEBUG 0")
-
 		for _, accion := range logs {
 
-			log.Println("accion", accion)
-			log.Println("DEBUG 1")
-
 			split_line := strings.Split(accion, " ")
-			log.Println("DEBUG 2")
+
 			operacion := strings.TrimSuffix(split_line[0], "\n")
-			log.Println("DEBUG 3")
+
 			planeta := strings.TrimSuffix(split_line[1], "\n")
 			ciudad := strings.TrimSuffix(split_line[2], "\n")
 			valor := ""
 
-			log.Println("DEBUG 4")
-
 			if len(split_line) > 3 {
 				valor = strings.TrimSuffix(split_line[3], "\n")
 			}
-
-			log.Println("DEBUG 5")
 
 			switch operacion {
 			case "AddCity":
@@ -506,11 +486,7 @@ func ApplyChanges(pos int32, val int32, valDom int32, logs []string, target stri
 				fmt.Println(DeleteCity(planeta, ciudad))
 			}
 
-			log.Println("DEBUG 6")
-
 			Hashing[findHashing(Hashing, target)].vector[pos]++
-
-			log.Println("DEBUG 7")
 
 		}
 
@@ -520,7 +496,6 @@ func ApplyChanges(pos int32, val int32, valDom int32, logs []string, target stri
 
 func ConsistenciaEventual() {
 
-	fmt.Println("Consistencia Eventual...1")
 	// Establecer conexión con servidor 3
 	path, _ := os.Getwd()
 
@@ -550,11 +525,10 @@ func ConsistenciaEventual() {
 	for true {
 
 		time.Sleep(60 * time.Second)
-		fmt.Println("Consistencia Eventual...")
+		log.Println("[Consistencia Eventual]")
 
 		//HACER PING
 		signal := "Pingeao"
-		fmt.Println("Pingeao")
 
 		// Avisar a los servidores que envien sus Hashing
 		r1, _ := client.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
@@ -562,8 +536,6 @@ func ConsistenciaEventual() {
 
 		r2, _ := client2.Comands_Request_Hashing(ctx2, &pb.PingMsg{Signal: signal})
 		newHash = MergeHashing(newHash, r2.GetHashing())
-
-		fmt.Println("newHASH: ", newHash)
 
 		for _, keyvalue := range newHash {
 
@@ -579,22 +551,22 @@ func ConsistenciaEventual() {
 
 			// Recuperación de Logs y Reloj para un Planeta Particular del SV esclavo S3
 			r1, _ := client.Comands_Request_Files(ctx, &pb.PingMsg{Signal: target})
-			fmt.Println("Logs S3: ", r1.GetText())
-			fmt.Println("Reloj S3: ", r1.GetRelojVector())
+			log.Println("MUNDO -> ", target)
+			log.Println("LOG SERV 3: ", r1.GetText())
+			log.Println("RELOJ SERV 3: ", r1.GetRelojVector())
 			relojDom := Hashing[findHashing(Hashing, target)].vector // Reloj Dominante S2
 			logs1 := r1.GetText()                                    // Logs del Esclavo S3
 			reloj1 := r1.GetRelojVector()                            // Reloj del Esclavo S3
-			fmt.Println("Reloj Dominante: ", relojDom)
+			log.Println("RELOJ DOMINANTE: ", relojDom)
 			// Recuperación de Logs y Reloj para un Planeta Particular del SV esclavo S1
 			r2, _ := client2.Comands_Request_Files(ctx2, &pb.PingMsg{Signal: target})
-			fmt.Println("Logs S1: ", r2.GetText())
-			fmt.Println("Reloj S1: ", r2.GetRelojVector())
+			fmt.Println("LOG SERV 1: ", r2.GetText())
+			fmt.Println("RELOJ SERV 1: ", r2.GetRelojVector())
 			logs2 := r2.GetText()         // Logs del Esclavo S1
 			reloj2 := r2.GetRelojVector() // Reloj del Esclavo S1
 
 			// Aplicar cambios del Log al registro planetario
 			ApplyChanges(2, reloj1[2], relojDom[2], logs1, target) // sd: [0,3,0] se: [0,0,4]
-			fmt.Println("APPLY CHANGES S3")
 			ApplyChanges(0, reloj2[0], relojDom[0], logs2, target) // sd: [0,3,0] se: [1,0,0]
 
 			// Lectura del archivo de planeta
@@ -739,7 +711,7 @@ func MergeHashing(Hash1 []Keyvalue, Hash2 []*pb.HashRepply_KeyValue) []Keyvalue 
 		index := findHashing(Hash1, planeta)
 		res = append(res, Hash1[index])
 	}
-	fmt.Println(res)
+
 	return res
 }
 
@@ -774,7 +746,7 @@ func main() {
 	}
 	//Fulcrum dominante
 	if idFulcrum == 1 {
-		fmt.Println("Soy el Fulcrum dominante uwu")
+		log.Println("SOY EL FULCRUM DOMINANTE uwu")
 		// Function each seconds
 		go ConsistenciaEventual()
 

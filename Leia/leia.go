@@ -45,7 +45,29 @@ const (
 )
 
 var opcion = ""
-var reloj_vector_Leia []int32
+
+type Keyvalue struct {
+	planeta string
+	vector  []int32{0,0,0}
+}
+
+var relojes_Leia []Keyvalue
+var ultimo_ip_server string
+var registro_ciudades []string
+
+//Encuentra la posicion en la que se encuentra el planeta deseado en la lista de Keyvalues
+func findHashing(Hashing []Keyvalue, planeta string) int {
+
+	for i, keyvalue := range Hashing {
+		if keyvalue.planeta == planeta {
+			fmt.Println("Planeta encontrado")
+			return i
+		}
+	}
+
+	return -1
+
+}
 
 func main() {
 	// Crear un gRPC canal para comunicarse con el servidor
@@ -58,9 +80,7 @@ func main() {
 
 	defer conn.Close()
 
-	// Client Stub to perform RPCs
 	client := pb.NewComunicationClient(conn)
-	// Contact the server and psirint out its response.
 	ctx := context.Background()
 
 	for opcion != "exit" {
@@ -95,11 +115,19 @@ func main() {
 		fmt.Println("nombrePlaneta: ", nombre_planeta)
 		fmt.Println("nombreCiudad: ", nombre_ciudad)
 
-		r, _ := client.Comands_Leia_Broker(ctx, &pb.ComandLBRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, RelojVector: reloj_vector_Leia})
+		indice_planeta := findHashing(relojes_Leia, nombre_planeta)
+
+		reloj_vector_L := Hashing[indice_planeta].vector
+
+		r, _ := client.Comands_Leia_Broker(ctx, &pb.ComandLBRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, RelojVector: reloj_vector_L})
 
 		cant_soldados := r.GetCantRebelds()
 
 		reloj_vector_Leia := r.GetRelojVector()
+
+		Hashing[indice_planeta].vector = reloj_vector_Leia
+
+		registro_ciudades = append(registro_ciudades, nombre_ciudad)
 
 		fmt.Println("Cantidad de soldados: ", cant_soldados)
 		fmt.Println("Reloj vector Leia: ", reloj_vector_Leia)

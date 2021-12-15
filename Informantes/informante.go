@@ -63,7 +63,6 @@ func main() {
 	// Contact the server and psirint out its response.
 	ctx := context.Background()
 	//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	fmt.Println("Escoge a:")
 
 	for opcion != "exit" {
 
@@ -71,33 +70,38 @@ func main() {
 		var valor string
 		var comand string
 
+		// clean the prompt
+		CallClear()
+
 		// MENÚ
-		fmt.Println("Ingrese Operación: ")
+		fmt.Println("---->	MENÚ INFORMANTE	<----")
+		fmt.Println("							 ")
 		fmt.Println("	1. Añadir Ciudad")
 		fmt.Println("	2. Actualizar Nombre")
 		fmt.Println("	3. Actualiar Numero")
 		fmt.Println("	4. Eliminar Ciudad")
-
+		fmt.Print("Ingrese Operación: ")
 		fmt.Scanf("%s\n", &operacion)
 
 		// clean the prompt
 		CallClear()
+
 		fmt.Println("\nIngresar comando: ")
 
 		// El escáner puede escanear entradas por líneas
 
 		inputReader := bufio.NewReader(os.Stdin)
 		comand, _ = inputReader.ReadString('\n')
-		fmt.Println(comand)
+
 		comand = strings.TrimSuffix(comand, "\n")
-		fmt.Println("after suffix: ", comand)
+
 		splited := strings.Split(comand, " ")
 
 		nombre_planeta := splited[0]
 		nombre_ciudad := splited[1]
 
-		fmt.Println("nombrePlaneta: ", nombre_planeta)
-		fmt.Println("nombreCiudad: ", nombre_ciudad)
+		// fmt.Println("nombrePlaneta: ", nombre_planeta)
+		// fmt.Println("nombreCiudad: ", nombre_ciudad)
 
 		if len(splited) == 3 {
 			valor = splited[2]
@@ -107,10 +111,7 @@ func main() {
 
 		r, _ := client.Comands_Informantes_Broker(ctx, &pb.ComandIBRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, Valor: valor, RelojVector: reloj_vector_Informante})
 
-		fmt.Println("Direccion IP seleccionada: ", r)
-
 		// Connection with IP Fulcrum
-
 		FulcrumAddress := r.GetIp()
 
 		conn2, err2 := grpc.Dial(FulcrumAddress, grpc.WithInsecure(), grpc.WithBlock())
@@ -123,7 +124,7 @@ func main() {
 
 		r2, _ := client2.Comands_Informantes_Fulcrum(ctx, &pb.ComandIFRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, Valor: valor})
 
-		fmt.Println("Reply: ", r2)
+		fmt.Println("RESULTADO OPERACION: ", r2)
 
 		// Close connection with Fulcrum
 		conn2.Close()
