@@ -419,6 +419,7 @@ func (s *server) Comands_Request_Files(ctx context.Context, in *pb.PingMsg) (*pb
 	return &pb.ComandFFFiles{Text: lines, RelojVector: reloj_vector}, nil
 
 }
+
 func (s *server) Comands_Retrieve_Files(ctx context.Context, in *pb.ComandFFFiles) (*pb.PingMsg, error) {
 
 	//Replicar cambios recibidos del nodo dominante en el registro planetario borrar logs y guardar reloj
@@ -428,7 +429,12 @@ func (s *server) Comands_Retrieve_Files(ctx context.Context, in *pb.ComandFFFile
 	text := in.GetText()
 	path, _ := os.Getwd()
 	filepath := path + "/planetas/" + target + ".txt"
-
+	path_logs := path + "/logs/" + target
+	if findHashing(Hashing, target) == -1 {
+		Hashing = append(Hashing, Keyvalue{planeta: target, vector: in.GetRelojVector()})
+		createFile(filepath)
+		createFile(path_logs)
+	}
 	// Replace Vector Dominante
 	Hashing[findHashing(Hashing, target)].vector = in.GetRelojVector()
 
@@ -442,7 +448,6 @@ func (s *server) Comands_Retrieve_Files(ctx context.Context, in *pb.ComandFFFile
 	}
 
 	// Delete Logs
-	path_logs := path + "/logs/" + target
 
 	e := os.Remove(path_logs + ".txt")
 
