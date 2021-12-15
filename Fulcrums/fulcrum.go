@@ -450,6 +450,8 @@ func (s *server) Comands_Retrieve_Files(ctx context.Context, in *pb.ComandFFFile
 		log.Fatal(e)
 	}
 
+	createFile(path_logs)
+
 	return &pb.PingMsg{Signal: ""}, nil
 
 }

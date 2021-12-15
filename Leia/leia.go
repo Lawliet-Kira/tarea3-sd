@@ -88,6 +88,7 @@ func main() {
 
 		var operacion string
 		var comand string
+		var reloj_vector_L []int32
 
 		// MENÚ
 		fmt.Println("Ingrese Operación: ")
@@ -120,9 +121,10 @@ func main() {
 
 		if indice_planeta == -1 {
 			Hashing = append(Hashing, Keyvalue{planeta: nombre_planeta, vector: []int32{0, 0, 0}})
+			reloj_vector_L = []int32{0, 0, 0}
+		} else {
+			reloj_vector_L = Hashing[indice_planeta].vector
 		}
-
-		reloj_vector_L := Hashing[indice_planeta].vector
 
 		r, _ := client.Comands_Leia_Broker(ctx, &pb.ComandLBRequest{Operacion: operacion, NombrePlaneta: nombre_planeta, NombreCiudad: nombre_ciudad, RelojVector: reloj_vector_L})
 
