@@ -14,6 +14,9 @@ info:
 fulcrum:
 	go run Fulcrums/fulcrum.go
 
+leia:
+	go run Leia/leia.go
+
 git:
 	git add .
 	git commit -m "a"

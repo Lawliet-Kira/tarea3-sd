@@ -54,6 +54,7 @@ type Keyvalue struct {
 var relojes_Leia []Keyvalue
 var ultimo_ip_server string
 var registro_ciudades []string
+var Hashing []Keyvalue
 
 //Encuentra la posicion en la que se encuentra el planeta deseado en la lista de Keyvalues
 func findHashing(Hashing []Keyvalue, planeta string) int {
@@ -118,7 +119,7 @@ func main() {
 		indice_planeta := findHashing(relojes_Leia, nombre_planeta)
 
 		if indice_planeta == -1 {
-			Hashing = append(Hashing, {planeta: nombre_planeta, vector: int32{0,0,0}})
+			Hashing = append(Hashing, Keyvalue{planeta: nombre_planeta, vector: []int32{0, 0, 0}})
 		}
 
 		reloj_vector_L := Hashing[indice_planeta].vector
