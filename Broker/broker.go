@@ -39,26 +39,29 @@ func (s *server) Comands_Informantes_Broker(ctx context.Context, in *pb.ComandIB
 
 type Keyvalue struct {
 	planeta string
-	vector  []int32{0,0,0}
+	vector  []int32
 }
 
 func EscogerIP_MonotonicReads(reloj_s1 []int32, reloj_s2 []int32, reloj_s3 []int32, reloj_Leia []int32) string{
 	
 	var ip_seleccionadas []string
-	var flag bool =true
 	
-	for i, pos range := reloj_Leia{
+	flag := true
+	
+	for i, pos range := reloj_Leia {
 		if reloj_s1[i] < pos{
 			flag = false
 			break
 		}
-	
 	}
+
 	if flag {
 		ip_seleccionadas = append(ip_seleccionadas, ServerAddress1)
 	}
+	
 	flag = true
-	for i, pos range := reloj_Leia{
+	
+	for i, pos range := reloj_Leia {
 		if reloj_s2[i] < pos{
 			flag = false
 			break
@@ -117,7 +120,7 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 	var reloj_vector_s1 []int32
 	var reloj_vector_s2 []int32
 	var reloj_vector_s3 []int32
-	r, _ := client2.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
+	r, _ := client.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
 	hash_s1 := r.GetHashing()
 	indice_planeta_s1 := findHashing(hash_s1)
 	if indice_planeta_s1 == -1{
@@ -140,7 +143,7 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 	// Contact the server and print out its response.
 	ctx = context.Background()
 
-	r, _ = client2.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
+	r, _ = client.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
 	hash_s2 := r.GetHashing()
 	indice_planeta_s2 := findHashing(hash_s2)
 	if indice_planeta_s2 == -1{
@@ -164,7 +167,7 @@ func (s *server) Comands_Leia_Broker(ctx context.Context, in *pb.ComandLBRequest
 	// Contact the server and psirint out its response.
 	ctx = context.Background()
 
-	r, _ = client2.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
+	r, _ = client.Comands_Request_Hashing(ctx, &pb.PingMsg{Signal: signal})
 	hash_s3 := r.GetHashing()
 	indice_planeta_s3 := findHashing(hash_s3)
 	if indice_planeta_s3 == -1{

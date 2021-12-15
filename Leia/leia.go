@@ -48,7 +48,7 @@ var opcion = ""
 
 type Keyvalue struct {
 	planeta string
-	vector  []int32{0,0,0}
+	vector  []int32
 }
 
 var relojes_Leia []Keyvalue
